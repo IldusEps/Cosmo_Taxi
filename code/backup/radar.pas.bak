@@ -1,0 +1,61 @@
+{ Main "playing game" state, where most of the game logic takes place.
+
+  Feel free to use this code as a starting point for your own projects.
+  (This code is in public domain, unlike most other CGE code which
+  is covered by the LGPL license variant, see the COPYING.txt file.) }
+unit Radar;
+
+interface
+
+uses Classes,
+  CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
+  CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
+  CastleGLImages, CastleTimeUtils;
+
+type
+
+  { TMap }
+
+TMap = class(TUIControlSizeable)
+  private
+    Video: TGLVideo2D;
+    AnimationTime: TFloatTime;
+  public
+    procedure GLContextOpen; override;
+    procedure GLContextClose; override;
+    procedure Render; override;
+    procedure Update(const SecondsPassed: single; var HandleInput: boolean); override;
+  end;
+
+implementation
+
+{ TMap }
+
+procedure TMap.GLContextOpen;
+begin
+  inherited GLContextOpen;
+  Video := TGLVideo2D.Create('castle-data:/radar/Radar.gif', True);
+  Video.FramesPerSecond := 4;
+  Video.TimeLoop := True;
+end;
+
+procedure TMap.GLContextClose;
+begin
+//  Free(Video);
+  inherited;
+end;
+
+procedure TMap.Render;
+begin
+  inherited Render;
+  Video.DrawableImageFromTime(AnimationTime).Draw(0, 0, 100, 100);
+  Video.DrawableImageFromTime(AnimationTime + 1).Draw(0, 0, 100, 100);
+end;
+
+procedure TMap.Update(const SecondsPassed: single; var HandleInput: boolean);
+begin
+  inherited Update(SecondsPassed, HandleInput);
+  AnimationTime += SecondsPassed;
+end;
+
+end.

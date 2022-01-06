@@ -1,0 +1,47 @@
+unit Background;
+
+interface
+uses Classes,
+  CastleUIState, CastleScene, CastleLog, SysUtils, CastleVectors;
+
+type
+
+{ TBackground }
+
+TBackground = class
+public
+  Background: TCastleScene;
+  Height, Width: Double;
+  ScenesList: TCastleSceneList;
+  XY: TVector2DoubleList;
+  constructor Create(Background_: TCastleScene);
+  function CheckBackground(x, y: Double): Boolean;
+end;
+
+implementation
+
+{ TBackground }
+
+constructor TBackground.Create(Background_: TCastleScene);
+var
+  i: Integer;
+begin
+  Background:= Background_;
+  ScenesList:= TCastleSceneList.Create;
+  XY:= TVector2DoubleList.Create;
+  for i:= 0 to Background.Count do
+  begin
+    ScenesList.Add(Background.Items[i]);
+    XY.Add(Background.Items[i].TranslationXY);
+  end;
+end;
+
+function TBackground.CheckBackground(x, y: Double): Boolean;
+begin
+  if (Background.Translation.Y + Background.BoundingBox.Size.Y + 200 > y + Height) then
+  begin
+    XY
+  end;
+end;
+
+end.
