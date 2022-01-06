@@ -10,7 +10,7 @@ interface
 uses Classes,
   CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
   CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
-  CastleGLImages, Radar;
+  CastleGLImages, CastleTransform, Radar, Station;
 
 type
   { Main "playing game" state, where most of the game logic takes place. }
@@ -34,9 +34,12 @@ type
     Radar: TMap;
 //    Stations_mini: array of TDrawableImage;
 
-      { Background }
-      Background, Background_main: TCastleScene;
-      _backgroundOriginalSizeX,_backgroundOriginalSizeY: Single;
+    { Background }
+    Background, Background_main: TCastleScene;
+    _backgroundOriginalSizeX,_backgroundOriginalSizeY: Single;
+
+    {Stations}
+    Stations: array of TStation;
 
     { Others }
     CheckboxCameraFollow: TCastleCheckbox;
@@ -51,6 +54,7 @@ type
 var
   StatePlay: TStatePlay;
   BaseSpeed: Double = 0.5;
+  AddSpeed: Double = 0.3;
   BaseRotation: Double = 0.01;
 
 implementation
@@ -71,7 +75,9 @@ var
   Background_size: TVector2;
   Background_: TCastleScene;
   iX, iY: integer;
-  i: integer;
+  i: integer;var
+  RBodyRocket: TRigidBody;
+  ColliderRocket: TBoxCollider;
 begin
   inherited;
 
@@ -81,6 +87,18 @@ begin
 
   { Scenes }
   SceneRocket := DesignedComponent('SceneRocket') as TCastleScene;
+  //SceneRocket.Gravity:= False;
+  //
+  //RBodyRocket := TRigidBody.Create(SceneRocket);
+  //RBodyRocket.Setup2D;
+  //RBodyRocket.Gravity:= False;
+  //
+  //ColliderRocket := TBoxCollider.Create(RBodyRocket);
+  //ColliderRocket.Size := Vector3(SceneRocket.LocalBoundingBox.Size.XY, 2);
+  //ColliderRocket.Mass:= 0;
+  //ColliderRocket.Friction:= 0;
+  //
+  //SceneRocket.RigidBody := RBodyRocket;
 
   { Radar }
   Rocket_mini := DesignedComponent('Rocket_mini') as TCastleImageControl;
@@ -128,7 +146,7 @@ begin
     end
     else for i:= 1 to iY do
     begin
-        Background_:= TCastleScene.Create(Self);
+        Background_:= TStation.Create(Self);
         Background_.Add(Background);
         Background_.Translation.X:= -Background_size.X/2 + _backgroundOriginalSizeX * iX;
         Background_.Translation.Y:= -Background_size.Y/2 + _backgroundOriginalSizeY * i;
@@ -137,6 +155,12 @@ begin
     end;
     iX:= iX + 1;
   end;
+
+  {Stations}
+  SetLength(Stations, 1);
+  Stations[0]:= TStation.Create(Self);
+  Stations[0].Translation.Y:= 1000;
+  MainViewport.Items.Add(Stations[0]);
 end;
 
 procedure TStatePlay.Render;
@@ -210,6 +234,18 @@ begin
     RocketRotation := RocketRotation - BaseRotation;
 
     SceneRocket.PlayAnimation('RightRotate', false);
+  end
+  else if Event.IsKey(keyQ) then
+  begin
+    RocketSpeed.Y := RocketSpeed.Y - AddSpeed * sin(RocketRotation);
+    RocketSpeed.X := RocketSpeed.X - AddSpeed * cos(RocketRotation);
+    SceneRocket.PlayAnimation('Left', false);
+  end
+  else if Event.IsKey(keyE) then
+  begin
+    RocketSpeed.Y := RocketSpeed.Y + AddSpeed * sin(RocketRotation);
+    RocketSpeed.X := RocketSpeed.X + AddSpeed * cos(RocketRotation);
+    SceneRocket.PlayAnimation('Right', false);
   end;
 
   if Event.IsKey(keyF5) then

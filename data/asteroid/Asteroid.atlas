@@ -1,0 +1,13 @@
+
+Asteroid.png
+size: 256,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+asteroid3
+  rotate: false
+  xy: 0, 0
+  size: 252, 214
+  orig: 252, 214
+  offset: 0, 0
+  index: -1

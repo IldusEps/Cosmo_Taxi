@@ -1,0 +1,19 @@
+unit Asteroid;
+
+interface
+uses Classes,
+  CastleUIState, CastleScene, CastleLog, SysUtils, CastleVectors;
+
+type
+
+{ TBackground }
+
+TStation = class
+public
+  constructor Create();
+end;
+
+implementation
+
+
+end.

@@ -1,0 +1,47 @@
+unit Station;
+
+interface
+uses Classes,
+  CastleUIState, CastleScene, CastleLog, SysUtils, CastleVectors, CastleTransform;
+
+type
+
+{ TStation }
+
+TStation = class(TCastleScene)
+public
+  {parameters}
+  IsNeedTaxi: Boolean;
+  TypeStation: Integer;
+
+  constructor Create(AOwner: TComponent); override;
+end;
+
+implementation
+
+
+{ TStation }
+
+constructor TStation.Create(AOwner: TComponent);
+var
+  RBody: TRigidBody;
+  Collider: TBoxCollider;
+begin
+  inherited Create(AOwner);
+  Setup2D;
+  Load('castle-data:/asteroid/Asteroid.json');
+  Spatial:= [ssRendering, ssDynamicCollisions];
+  Translation.Z:= 2;
+  Gravity:= False;
+  Scale:= Vector3(3, 3, 1);
+//
+//  RBody := TRigidBody.Create(Self);
+//  RBody.Setup2D;
+//
+//  Collider := TBoxCollider.Create(RBody);
+//  Collider.Size := Vector3(LocalBoundingBox.Size.XY, 2);
+//
+//  RigidBody := RBody;
+end;
+
+end.
