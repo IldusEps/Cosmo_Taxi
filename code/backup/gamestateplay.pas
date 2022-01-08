@@ -10,7 +10,28 @@ interface
 uses Classes,
   CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
   CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
-  CastleGLImages, CastleTransform, Radar, Station;
+  CastleGLImages, CastleTransform, Radar, Station, CastleDebugTransform;
+
+
+{ classes }
+type
+
+{ TRocket }
+
+TRocket = class
+  Landing: Boolean;
+  Speed: TVector2;
+  Rotation: Double;
+  LabelRocket: TCastleLabel;
+  Scene: TCastleScene;
+
+  { constans }
+  BaseSpeed: Double;
+  AddSpeed: Double;
+  BaseRotation: Double;
+
+  procedure Land;
+end;
 
 type
   { Main "playing game" state, where most of the game logic takes place. }
@@ -25,8 +46,7 @@ type
 
     { Rocket parameters }
     SceneRocket: TCastleScene;
-    RocketSpeed: TVector2;
-    RocketRotation: Double;
+    Rocket: TRocket;
 
     { Radar }  
     Rocket_mini: TCastleImageControl;
@@ -53,14 +73,24 @@ type
 
 var
   StatePlay: TStatePlay;
-  BaseSpeed: Double = 0.5;
-  AddSpeed: Double = 0.3;
-  BaseRotation: Double = 0.01;
 
 implementation
 
 uses SysUtils, Math,
   GameStateMenu;
+
+{ TRocket }
+
+procedure TRocket.Land;
+begin
+  Speed.X:= 0;
+  Speed.Y:= 0;
+  Rotation:= 0;
+
+  Landing:= True;
+
+  Scene.PlayAnimation('Landing', false);
+end;
 
 { TStatePlay ----------------------------------------------------------------- }
 
@@ -78,6 +108,7 @@ var
   i: integer;var
   RBodyRocket: TRigidBody;
   ColliderRocket: TBoxCollider;
+  Debug: TDebugTransform;
 begin
   inherited;
 
@@ -87,24 +118,26 @@ begin
 
   { Scenes }
   SceneRocket := DesignedComponent('SceneRocket') as TCastleScene;
-  //SceneRocket.Gravity:= False;
-  //
-  //RBodyRocket := TRigidBody.Create(SceneRocket);
-  //RBodyRocket.Setup2D;
-  //RBodyRocket.Gravity:= False;
-  //
-  //ColliderRocket := TBoxCollider.Create(RBodyRocket);
-  //ColliderRocket.Size := Vector3(SceneRocket.LocalBoundingBox.Size.XY, 2);
-  //ColliderRocket.Mass:= 0;
-  //ColliderRocket.Friction:= 0;
-  //
-  //SceneRocket.RigidBody := RBodyRocket;
+
+  RBodyRocket := TRigidBody.Create(SceneRocket);
+  RBodyRocket.Setup2D;
+  RBodyRocket.Gravity:= False;
+  RBodyRocket.Dynamic:= False;
+  RBodyRocket.Animated:= True;
+
+  ColliderRocket := TBoxCollider.Create(RBodyRocket);
+  ColliderRocket.Size := Vector3(SceneRocket.LocalBoundingBox.Size.XY, 20);
+
+  SceneRocket.RigidBody := RBodyRocket;
+
+  Debug := TDebugTransform.Create(Self);
+  Debug.Attach(SceneRocket);
+  Debug.Exists := true;
 
   { Radar }
   Rocket_mini := DesignedComponent('Rocket_mini') as TCastleImageControl;
   RadarDesign := DesignedComponent('Radar') as TCastleUserInterface;
   Radar := TMap.Create(RadarDesign);
-  //Radar.FullSize := True;
   RadarDesign.InsertFrontIfNotExists(Radar);
 
   Rocket_mini := DesignedComponent('Rocket_mini') as TCastleImageControl;
@@ -146,7 +179,7 @@ begin
     end
     else for i:= 1 to iY do
     begin
-        Background_:= TStation.Create(Self);
+        Background_:= TCastleScene.Create(Self);
         Background_.Add(Background);
         Background_.Translation.X:= -Background_size.X/2 + _backgroundOriginalSizeX * iX;
         Background_.Translation.Y:= -Background_size.Y/2 + _backgroundOriginalSizeY * i;
@@ -156,31 +189,56 @@ begin
     iX:= iX + 1;
   end;
 
-  {Stations}
-  SetLength(Stations, 10);
-  Stations[0]:= TStation.Create(Self);
-  Stations[0].Translation.Y:= 1000;
-  MainViewport.Items.Add(Stations[0]);
+  { Stations }
+  SetLength(Stations, 1);
+  Stations[0]:= TStation.Create(DesignedComponent('Asteroid') as TCastleScene, Vector2(0, 1000));
+
+  { Parameters }
+  Rocket:= TRocket.Create;
+  Rocket.Landing:= False;
+  Rocket.BaseSpeed:= 0.5;
+  Rocket.AddSpeed:= 0.3;
+  Rocket.BaseRotation:= 0.01;
+  Rocket.Scene:= SceneRocket;
+
+  // Debuging
+  //Background_main.Visible:= False; 
+  Rocket.LabelRocket:= DesignedComponent('Rocket') as TCastleLabel;
+  with Rocket.LabelRocket.Text do
+  begin
+    Clear;
+    Append('Speed_Y: ' + FloatToStr(Rocket.Speed.Y));
+    Append('Speed_X: ' + FloatToStr(Rocket.Speed.X));
+    Append('Rotation: ' + FloatToStr(Rocket.Rotation));
+    Append('Landing: ' + BoolToStr(Rocket.Landing, True));
+    Append('');
+    Append('');
+  end;
 end;
 
 procedure TStatePlay.Render;
 begin
-  Rocket_mini.Rotation := RocketRotation;
+  Rocket_mini.Rotation := Rocket.Rotation;
 end;
 
 procedure TStatePlay.Update(const SecondsPassed: Single; var HandleInput: Boolean);
 var
   CamPos: TVector3;
   Trans: TVector2;
+  i: integer;
+  T: TCastleTransform;
 begin
   inherited;
   { This virtual method is executed every frame.}
 
   LabelFps.Caption := 'FPS: ' + Container.Fps.ToString;
 
-  SceneRocket.Translation.Y := SceneRocket.Translation.Y + RocketSpeed.Y;
-  SceneRocket.Translation.X := SceneRocket.Translation.X + RocketSpeed.X;
-  SceneRocket.Rotation := Vector4(0, 0, 1, RocketRotation);
+  if NOT(Rocket.Landing) then
+  begin
+    SceneRocket.Translation.Y := SceneRocket.Translation.Y + Rocket.Speed.Y;
+    SceneRocket.Translation.X := SceneRocket.Translation.X + Rocket.Speed.X;
+  end;
+  SceneRocket.Rotation := Vector4(0, 0, 1, Rocket.Rotation);
 
   if CheckboxCameraFollow.Checked then
   begin
@@ -205,6 +263,26 @@ begin
   else
   if (Trans.Y <= -_backgroundOriginalSizeY) then
     Background_main.Translation.Y:= SceneRocket.Translation.Y;
+
+  { Collides }
+    Rocket.LabelRocket.Text[0] := ('Speed_Y: ' + FloatToStr(Rocket.Speed.Y));
+    Rocket.LabelRocket.Text[1] := ('Speed_X: ' + FloatToStr(Rocket.Speed.X));
+    Rocket.LabelRocket.Text[2] := ('cos(Rotation): ' + FloatToStr(cos(Rocket.Rotation)));
+    Rocket.LabelRocket.Text[3] := ('Landing: ' + BoolToStr(Rocket.Landing, True));
+    Rocket.LabelRocket.Text[5] := ('Translation_Y: ' + FloatToStr(SceneRocket.Translation.Y));
+
+  for i := 0 to Stations[0].Scene.RigidBody.GetCollidingTransforms.Count - 1 do
+    if (SceneRocket.RigidBody.GetCollidingTransforms[i].Name = 'Asteroid') AND NOT(Rocket.Landing) then
+    begin
+      T:= SceneRocket.RigidBody.GetCollidingTransforms[i];
+      Rocket.LabelRocket.Text[4] := ('Trans: ' + FloatToStr(SceneRocket.Translation.Y - T.Translation.Y));
+      if (SceneRocket.Translation.Y - T.Translation.Y <= 150) AND (SceneRocket.Translation.Y - T.Translation.Y > 0)
+       AND (-Rocket.Speed.Y <= 3) AND (-Rocket.Speed.Y >= 0.5)
+       AND (Rocket.Speed.X <= 10) AND (cos(Rocket.Rotation) >= 0.98) then
+      begin
+        Rocket.Land;
+      end;
+    end;
 end;
 
 function TStatePlay.Press(const Event: TInputPressRelease): Boolean;
@@ -212,41 +290,55 @@ begin
   Result := inherited;
   if Result then Exit; // allow the ancestor to handle keys
 
-  if Event.IsKey(keyW) then
+  if NOT(Rocket.Landing) then
   begin
-    RocketSpeed.Y := RocketSpeed.Y + BaseSpeed * cos(RocketRotation);
-    RocketSpeed.X := RocketSpeed.X - BaseSpeed * sin(RocketRotation);
-    SceneRocket.PlayAnimation('Speed', false);
-  end
-  else if Event.IsKey(keyS) then
-  begin
-    RocketSpeed.Y := RocketSpeed.Y - BaseSpeed * cos(RocketRotation);
-    RocketSpeed.X := RocketSpeed.X + BaseSpeed * sin(RocketRotation);
-    SceneRocket.PlayAnimation('Down', false);
-  end
-  else if Event.IsKey(keyA) then
-  begin
-    RocketRotation := RocketRotation + BaseRotation;
-    SceneRocket.PlayAnimation('LeftRotate', false);
-  end
-  else if Event.IsKey(keyD) then
-  begin
-    RocketRotation := RocketRotation - BaseRotation;
+    with Rocket do
+    begin
+      if Event.IsKey(keyW) then
+      begin
+        Rocket.Speed.Y := Rocket.Speed.Y + Rocket.BaseSpeed * cos(Rocket.Rotation);
+        Rocket.Speed.X := Rocket.Speed.X - Rocket.BaseSpeed * sin(Rocket.Rotation);
+        SceneRocket.PlayAnimation('Speed', false);
+      end
+      else if Event.IsKey(keyS) then
+      begin
+        Speed.Y := Speed.Y - BaseSpeed * cos(Rotation);
+        Speed.X := Speed.X + BaseSpeed * sin(Rotation);
+        SceneRocket.PlayAnimation('Down', false);
+      end
+      else if Event.IsKey(keyA) then
+      begin
+        Rotation := Rocket.Rotation + BaseRotation;
+        SceneRocket.PlayAnimation('LeftRotate', false);
+      end
+      else if Event.IsKey(keyD) then
+      begin
+        Rotation := Rotation - BaseRotation;
 
-    SceneRocket.PlayAnimation('RightRotate', false);
-  end
-  else if Event.IsKey(keyQ) then
-  begin
-    RocketSpeed.Y := RocketSpeed.Y - AddSpeed * sin(RocketRotation);
-    RocketSpeed.X := RocketSpeed.X - AddSpeed * cos(RocketRotation);
-    SceneRocket.PlayAnimation('Left', false);
-  end
-  else if Event.IsKey(keyE) then
-  begin
-    RocketSpeed.Y := RocketSpeed.Y + AddSpeed * sin(RocketRotation);
-    RocketSpeed.X := RocketSpeed.X + AddSpeed * cos(RocketRotation);
-    SceneRocket.PlayAnimation('Right', false);
-  end;
+        SceneRocket.PlayAnimation('RightRotate', false);
+      end
+      else if Event.IsKey(keyQ) then
+      begin
+        Speed.Y := Speed.Y - AddSpeed * sin(Rotation);
+        Speed.X := Speed.X - AddSpeed * cos(Rotation);
+        SceneRocket.PlayAnimation('Left', false);
+      end
+      else if Event.IsKey(keyE) then
+      begin
+        Speed.Y := Speed.Y + AddSpeed * sin(Rotation);
+        Speed.X := Speed.X + AddSpeed * cos(Rotation);
+        SceneRocket.PlayAnimation('Right', false);
+      end;
+    end;
+  end else
+    if Event.IsKey(keySpace) then
+    begin
+      if (SceneRocket.PlayAnimation('Starting', false)) then
+      begin
+        Rocket.Landing:= False;
+        Rocket.Speed.Y:= 3;
+      end;
+    end;
 
   if Event.IsKey(keyF5) then
   begin

@@ -19,7 +19,8 @@
           "OriginPersistent" : {
             "$$ClassName" : "TCastleVector2Persistent",
             "X" : 5.0000000000000000E-001
-          }
+          },
+          "Scale" : 8.1873059272766113E-001
         },
         "Perspective" : {
           "$$ClassName" : "TCastlePerspective",
@@ -38,26 +39,6 @@
           "Name" : "PhysicsProperties"
         },
         "$Children" : [
-          {
-            "$$ClassName" : "TCastleScene",
-            "ExposeTransforms" : [
-            ],
-            "Name" : "SceneRocket",
-            "RenderOptions" : {
-              "$$ClassName" : "TCastleScene.TSceneRenderOptions",
-              "BlendingSort" : "bs2D",
-              "Name" : "RenderOptions"
-            },
-            "Spatial" : [
-              "ssRendering",
-              "ssDynamicCollisions"
-            ],
-            "TranslationPersistent" : {
-              "$$ClassName" : "TCastleVector3Persistent",
-              "Z" : 3.0000000000000000E+000
-            },
-            "URL" : "castle-data:/rocket/Rocket.json"
-          },
           {
             "$$ClassName" : "TCastleScene",
             "Collides" : false,
@@ -99,7 +80,7 @@
             "$$ClassName" : "TCastleScene",
             "ExposeTransforms" : [
             ],
-            "Name" : "Scene1",
+            "Name" : "Asteroid",
             "RenderOptions" : {
               "$$ClassName" : "TCastleScene.TSceneRenderOptions",
               "BlendingSort" : "bs2D",
@@ -111,16 +92,35 @@
               "Y" : 3.0000000000000000E+000
             },
             "Spatial" : [
+              "ssRendering",
               "ssDynamicCollisions"
             ],
             "TranslationPersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
-              "X" : -1.5550560302734375E+003,
-              "Y" : 1.9235955810546875E+003,
               "Z" : 2.0000000000000000E+000
             },
-            "URL" : "castle-data:/asteroid/Asteroid.json",
-            "Visible" : false
+            "URL" : "castle-data:/asteroid/Asteroid.json"
+          },
+          {
+            "$$ClassName" : "TCastleScene",
+            "ExposeTransforms" : [
+            ],
+            "Name" : "SceneRocket",
+            "ProcessEvents" : true,
+            "RenderOptions" : {
+              "$$ClassName" : "TCastleScene.TSceneRenderOptions",
+              "BlendingSort" : "bs2D",
+              "Name" : "RenderOptions"
+            },
+            "Spatial" : [
+              "ssRendering",
+              "ssDynamicCollisions"
+            ],
+            "TranslationPersistent" : {
+              "$$ClassName" : "TCastleVector3Persistent",
+              "Z" : 2.0000000000000000E+000
+            },
+            "URL" : "castle-data:/rocket/Rocket.json"
           }
         ]
       },
@@ -198,6 +198,24 @@
           "VerticalAnchorSelf" : "vpMiddle"
         }
       ]
+    },
+    {
+      "$$ClassName" : "TCastleLabel",
+      "ColorPersistent" : {
+        "$$ClassName" : "TCastleColorPersistent",
+        "Green" : 1.0000000000000000E+000,
+        "Red" : 1.0000000000000000E+000
+      },
+      "HorizontalAnchorDelta" : -4.0100012207031250E+002,
+      "HorizontalAnchorParent" : "hpRight",
+      "HorizontalAnchorSelf" : "hpRight",
+      "Name" : "Rocket",
+      "Text" : [
+        "Rocket"
+      ],
+      "VerticalAnchorDelta" : -3.1350830078125000E+001,
+      "VerticalAnchorParent" : "vpTop",
+      "VerticalAnchorSelf" : "vpTop"
     }
   ]
 }

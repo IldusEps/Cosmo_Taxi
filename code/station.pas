@@ -2,19 +2,22 @@ unit Station;
 
 interface
 uses Classes,
-  CastleUIState, CastleScene, CastleLog, SysUtils, CastleVectors, CastleTransform;
+  CastleUIState, CastleScene, CastleLog, SysUtils, CastleVectors, CastleTransform,
+  CastleDebugTransform;
 
 type
 
 { TStation }
 
-TStation = class(TCastleScene)
+TStation = class
 public
+  Scene: TCastleScene; 
+  RBody: TRigidBody;
+  Collider: TBoxCollider;
   {parameters}
   IsNeedTaxi: Boolean;
   TypeStation: Integer;
-
-  constructor Create(AOwner: TComponent); override;
+  constructor Create(AScene: TCastleScene; Translation: TVector2);
 end;
 
 implementation
@@ -22,26 +25,27 @@ implementation
 
 { TStation }
 
-constructor TStation.Create(AOwner: TComponent);
+constructor TStation.Create(AScene: TCastleScene; Translation: TVector2);
 var
-  RBody: TRigidBody;
-  Collider: TBoxCollider;
+  Debug: TDebugTransform;
 begin
-  inherited Create(AOwner);
-  Setup2D;
-  Load('castle-data:/asteroid/Asteroid.json');
-  Spatial:= [ssRendering, ssDynamicCollisions];
-  Translation.Z:= 2;
-  Gravity:= False;
-  Scale:= Vector3(3, 3, 1);
+  Scene:= AScene;
+  Scene.TranslationXY:= Translation;
 
-  RBody := TRigidBody.Create(Self);
+  RBody := TRigidBody.Create(Scene);
+  RBody.Gravity:= False;
+  RBody.Dynamic:= True;
+  RBody.Trigger:= True;
   RBody.Setup2D;
 
   Collider := TBoxCollider.Create(RBody);
-  Collider.Size := Vector3(LocalBoundingBox.Size.XY, 2);
+  Collider.Size := Vector3(Scene.LocalBoundingBox.Size.XY, 20);
 
-  RigidBody := RBody;
+  Scene.RigidBody := RBody;
+
+  Debug := TDebugTransform.Create(Scene);
+  Debug.Attach(Scene);
+  Debug.Exists := true;
 end;
 
 end.
