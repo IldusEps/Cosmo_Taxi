@@ -48,8 +48,8 @@ end;
 procedure TMap.Render;
 begin
   inherited Render;
-  Video.DrawableImageFromTime(AnimationTime).Draw(0, 0, 100, 100);
-  Video.DrawableImageFromTime(AnimationTime + 1).Draw(0, 0, 100, 100);
+  Video.DrawableImageFromTime(AnimationTime).Draw(0, 0, 150 * UIScale, 150 * UIScale);
+  Video.DrawableImageFromTime(AnimationTime + 1).Draw(0, 0, 150 * UIScale, 150 * UIScale);
 end;
 
 procedure TMap.Update(const SecondsPassed: single; var HandleInput: boolean);

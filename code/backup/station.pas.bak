@@ -9,15 +9,15 @@ type
 
 { TStation }
 
-TStation = class
+TStation = class(TCastleScene)
 public
-  Scene: TCastleScene; 
+  //Scene: TCastleScene; 
   RBody: TRigidBody;
   Collider: TBoxCollider;
   {parameters}
   IsNeedTaxi: Boolean;
   TypeStation: Integer;
-  constructor Create(AScene: TCastleScene; Translation: TVector2);
+  constructor Create(AOwner: TComponent; AScene: String; ATranslation: TVector2; Index: Integer);
 end;
 
 implementation
@@ -25,26 +25,33 @@ implementation
 
 { TStation }
 
-constructor TStation.Create(AScene: TCastleScene; Translation: TVector2);
+constructor TStation.Create(AOwner: TComponent; AScene: String;
+  ATranslation: TVector2; Index: Integer);
 var
   Debug: TDebugTransform;
 begin
-  Scene:= AScene;
-  Scene.TranslationXY:= Translation;
+  inherited Create(AOwner);
 
-  RBody := TRigidBody.Create(Scene);
+  Load(AScene);
+  Setup2D;
+  TranslationXY:= ATranslation;
+  Translation.Z:= 2;
+  Scale:= Vector3(3, 3, 1);
+  Name:= 'Asteroid' + IntToStr(Index);
+
+  RBody := TRigidBody.Create(Self);
   RBody.Gravity:= False;
   RBody.Dynamic:= True;
   RBody.Trigger:= True;
   RBody.Setup2D;
 
   Collider := TBoxCollider.Create(RBody);
-  Collider.Size := Vector3(Scene.LocalBoundingBox.Size.XY, 20);
+  Collider.Size := Vector3(LocalBoundingBox.Size.XY, 20);
 
-  Scene.RigidBody := RBody;
+  RigidBody := RBody;
 
-  Debug := TDebugTransform.Create(Scene);
-  Debug.Attach(Scene);
+  Debug := TDebugTransform.Create(Self);
+  Debug.Attach(Self);
   Debug.Exists := true;
 end;
 

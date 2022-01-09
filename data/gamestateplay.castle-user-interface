@@ -54,6 +54,7 @@
             "$Children" : [
               {
                 "$$ClassName" : "TCastleScene",
+                "Collides" : false,
                 "ExposeTransforms" : [
                 ],
                 "Name" : "Background",
@@ -78,6 +79,7 @@
           },
           {
             "$$ClassName" : "TCastleScene",
+            "Collides" : false,
             "ExposeTransforms" : [
             ],
             "Name" : "Asteroid",
@@ -91,15 +93,12 @@
               "X" : 3.0000000000000000E+000,
               "Y" : 3.0000000000000000E+000
             },
-            "Spatial" : [
-              "ssRendering",
-              "ssDynamicCollisions"
-            ],
             "TranslationPersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
-              "Z" : 2.0000000000000000E+000
+              "Z" : 3.0000000000000000E+000
             },
-            "URL" : "castle-data:/asteroid/Asteroid.json"
+            "URL" : "castle-data:/asteroid/Asteroid.json",
+            "Visible" : false
           },
           {
             "$$ClassName" : "TCastleScene",
@@ -113,8 +112,7 @@
               "Name" : "RenderOptions"
             },
             "Spatial" : [
-              "ssRendering",
-              "ssDynamicCollisions"
+              "ssRendering"
             ],
             "TranslationPersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
@@ -168,6 +166,7 @@
       "$$ClassName" : "TCastleUserInterface",
       "Bottom" : 1.0000000000000000E+001,
       "Height" : 1.5000000000000000E+002,
+      "HorizontalAnchorDelta" : 1.0000000000000000E+001,
       "Name" : "Radar_main",
       "Width" : 1.5000000000000000E+002,
       "$Children" : [
@@ -175,6 +174,7 @@
           "$$ClassName" : "TCastleUserInterface",
           "FullSize" : true,
           "Height" : 1.5000000000000000E+002,
+          "HorizontalAnchorDelta" : 1.5000000000000000E+001,
           "HorizontalAnchorParent" : "hpMiddle",
           "HorizontalAnchorSelf" : "hpMiddle",
           "Name" : "Radar",
@@ -189,7 +189,6 @@
             "SmoothScaling" : false,
             "URL" : "castle-data:/rocket/Rocket_mini.png"
           },
-          "HorizontalAnchorDelta" : 1.5000000000000000E+001,
           "HorizontalAnchorParent" : "hpMiddle",
           "HorizontalAnchorSelf" : "hpMiddle",
           "Name" : "Rocket_mini",

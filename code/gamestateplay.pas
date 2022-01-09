@@ -10,7 +10,7 @@ interface
 uses Classes,
   CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
   CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
-  CastleGLImages, CastleTransform, Radar, Station, CastleDebugTransform;
+  CastleGLImages, CastleTransform, Radar, Station, Universy, CastleDebugTransform;
 
 
 { classes }
@@ -52,7 +52,7 @@ type
     Rocket_mini: TCastleImageControl;
     RadarDesign: TCastleUserInterface;
     Radar: TMap;
-//    Stations_mini: array of TDrawableImage;
+    Stations_mini: array of TCastleImageControl;
 
     { Background }
     Background, Background_main: TCastleScene;
@@ -60,6 +60,9 @@ type
 
     {Stations}
     Stations: array of TStation;
+
+    { Universy }
+    Universy: TUniversy;
 
     { Others }
     CheckboxCameraFollow: TCastleCheckbox;
@@ -103,18 +106,21 @@ end;
 procedure TStatePlay.Start;
 var
   Background_size: TVector2;
-  Background_: TCastleScene;
+  Background_, Asteroid_: TCastleScene;
   iX, iY: integer;
-  i: integer;var
+  i: integer;
   RBodyRocket: TRigidBody;
   ColliderRocket: TBoxCollider;
   Debug: TDebugTransform;
+
+  Radar_main: TCastleUserInterface;
 begin
   inherited;
 
   LabelFps := DesignedComponent('LabelFps') as TCastleLabel;
   MainViewport := DesignedComponent('MainViewport') as TCastleViewport;
   CheckboxCameraFollow := DesignedComponent('CheckboxCameraFollow') as TCastleCheckbox;
+  Radar_main := DesignedComponent('Radar_main') as TCastleUserInterface;
 
   { Scenes }
   SceneRocket := DesignedComponent('SceneRocket') as TCastleScene;
@@ -189,9 +195,70 @@ begin
     iX:= iX + 1;
   end;
 
+  { Universy }
+  Universy:= TUniversy.Create;
+
   { Stations }
-  SetLength(Stations, 1);
-  Stations[0]:= TStation.Create(DesignedComponent('Asteroid') as TCastleScene, Vector2(0, 1000));
+  SetLength(Stations, 50); 
+  SetLength(Stations_mini, Length(Stations));
+  Universy.SetVectors2(Length(Stations)-1);
+
+  for i:= 0 to Length(Stations)-1 do
+  begin
+    Stations[i]:= TStation.Create(Self, 'castle-data:/asteroid/Asteroid.json', Universy.GetVector2,
+    i);
+    MainViewport.Items.Insert(1, Stations[i]);
+
+    //   Stations_mini[i]:= TCastleImageControl.Create(Self);
+    //case Stations[i].TypeStation of
+    //  'Fill': Stations_mini[i].URL:= 'castle-data:/Fill_mini.png';
+    //  'Boots': Stations_mini[i].URL:= 'castle-data:/Boots_mini.png';
+    //  else
+    //    Stations_mini[i].URL:= 'castle-data:/radar/Asteroid_mini.png';
+    //end;
+    //Stations_mini[i].Width:= 10;
+    //Stations_mini[i].Height:= 10;
+    //iX:= round(round(Stations[i].Translation.X) - round(SceneRocket.Translation.X) / 200 + 55.0);
+    //iY:= round(round(Stations[i].Translation.Y) - round(SceneRocket.Translation.Y) / 200 + 55.0);
+    //if iX > 100 then
+    //  iX := 100
+    //else if iX < 10 then
+    //  iX := 10;
+    //if iY > 100 then
+    //  iY := 100
+    //else if iY < 10 then
+    //  iY := 10;
+    //Stations_mini[i].Align(hpMiddle, hpMiddle, iX);
+    //Stations_mini[i].Align(vpMiddle, vpMiddle, iY);
+    //
+    //Radar_main.InsertFront(Stations_mini[i]);
+
+  end;
+
+    Stations_mini[0]:= TCastleImageControl.Create(Self);
+    case Stations[0].TypeStation of
+      'Fill': Stations_mini[0].URL:= 'castle-data:/Fill_mini.png';
+      'Boots': Stations_mini[0].URL:= 'castle-data:/Boots_mini.png';
+      else
+        Stations_mini[0].URL:= 'castle-data:/radar/Asteroid_mini.png';
+    end;
+    Stations_mini[0].Width:= 10;
+    Stations_mini[0].Height:= 10;
+    iX:= round(round(Stations[0].Translation.X) - round(SceneRocket.Translation.X) / 200 + 55.0);
+    iY:= round(round(Stations[0].Translation.Y) - round(SceneRocket.Translation.Y) / 200 + 55.0);
+    if iX > 100 then
+      iX := 100
+    else if iX < 10 then
+      iX := 10;
+    if iY > 100 then
+      iY := 100
+    else if iY < 10 then
+      iY := 10;
+    Stations_mini[0].Align(hpMiddle, hpMiddle, iX);
+    Stations_mini[0].Align(vpMiddle, vpMiddle, iY);
+
+    Radar_main.InsertFront(Stations_mini[0]);
+//  MainViewport.Items.SortBackToFront2D;
 
   { Parameters }
   Rocket:= TRocket.Create;
@@ -202,7 +269,7 @@ begin
   Rocket.Scene:= SceneRocket;
 
   // Debuging
-  //Background_main.Visible:= False; 
+  //Background_main.Visible:= False;
   Rocket.LabelRocket:= DesignedComponent('Rocket') as TCastleLabel;
   with Rocket.LabelRocket.Text do
   begin
@@ -218,14 +285,13 @@ end;
 
 procedure TStatePlay.Render;
 begin
-  Rocket_mini.Rotation := Rocket.Rotation;
 end;
 
 procedure TStatePlay.Update(const SecondsPassed: Single; var HandleInput: Boolean);
 var
   CamPos: TVector3;
   Trans: TVector2;
-  i: integer;
+  i, iX, iY: integer;
   T: TCastleTransform;
 begin
   inherited;
@@ -235,8 +301,8 @@ begin
 
   if NOT(Rocket.Landing) then
   begin
-    SceneRocket.Translation.Y := SceneRocket.Translation.Y + Rocket.Speed.Y;
-    SceneRocket.Translation.X := SceneRocket.Translation.X + Rocket.Speed.X;
+    SceneRocket.Translation.Y := SceneRocket.Translation.Y + Rocket.Speed.Y * SecondsPassed*50;
+    SceneRocket.Translation.X := SceneRocket.Translation.X + Rocket.Speed.X * SecondsPassed*50;
   end;
   SceneRocket.Rotation := Vector4(0, 0, 1, Rocket.Rotation);
 
@@ -271,11 +337,11 @@ begin
     Rocket.LabelRocket.Text[3] := ('Landing: ' + BoolToStr(Rocket.Landing, True));
     Rocket.LabelRocket.Text[5] := ('Translation_Y: ' + FloatToStr(SceneRocket.Translation.Y));
 
-  for i := 0 to Stations[0].Scene.RigidBody.GetCollidingTransforms.Count - 1 do
-    if (SceneRocket.RigidBody.GetCollidingTransforms[i].Name = 'Asteroid') AND NOT(Rocket.Landing) then
+  for i := 0 to SceneRocket.RigidBody.GetCollidingTransforms.Count - 1 do
+    if (Copy(SceneRocket.RigidBody.GetCollidingTransforms[i].Name, 1, 8) = 'Asteroid') AND NOT(Rocket.Landing) then
     begin
       T:= SceneRocket.RigidBody.GetCollidingTransforms[i];
-      Rocket.LabelRocket.Text[4] := ('Trans: ' + FloatToStr(SceneRocket.Translation.Y - T.Translation.Y));
+      Rocket.LabelRocket.Text[4] := ('Trans: ' + FloatToStr(SceneRocket.Translation.Y - T.Translation.Y)) + ' __ ' + T.Name;
       if (SceneRocket.Translation.Y - T.Translation.Y <= 150) AND (SceneRocket.Translation.Y - T.Translation.Y > 0)
        AND (-Rocket.Speed.Y <= 3) AND (-Rocket.Speed.Y >= 0.5)
        AND (Rocket.Speed.X <= 10) AND (cos(Rocket.Rotation) >= 0.98) then
@@ -283,6 +349,28 @@ begin
         Rocket.Land;
       end;
     end;
+
+  { ImageContols }
+  Rocket_mini.Rotation := Rocket.Rotation;
+
+  //for i := 0 to 1 do       //Length(Stations) - 1
+  i:=0;
+  begin
+    iX:= round((round(Stations[i].Translation.X) - round(SceneRocket.Translation.X)) / 200);
+    if i = 0 then
+        WritelnLog(FloatToStr(round((round(Stations[i].Translation.X) - round(SceneRocket.Translation.X)) / 200)));
+    iY:= round((round(Stations[i].Translation.Y) - round(SceneRocket.Translation.Y)) / 200);
+    if iX > 100 then
+      iX := 100
+    else if iX < 10 then
+      iX := 10;
+    if iY > 100 then
+      iY := 100
+    else if iY < 10 then
+      iY := 10;
+    Stations_mini[i].Anchor(hpMiddle, hpMiddle, iX);
+    Stations_mini[i].Anchor(vpMiddle, vpMiddle, iY);
+  end;
 end;
 
 function TStatePlay.Press(const Event: TInputPressRelease): Boolean;

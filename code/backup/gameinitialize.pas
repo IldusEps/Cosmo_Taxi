@@ -35,7 +35,7 @@ begin
   StateMenu := TStateMenu.Create(Application);
   {$endregion 'Castle State Creation'}
 
-  TUIState.Current := StatePlay;
+  TUIState.Current := StateMenu;
 end;
 
 initialization
