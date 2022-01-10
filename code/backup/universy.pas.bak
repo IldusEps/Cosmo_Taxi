@@ -72,7 +72,7 @@ begin
         if Universy_Skips then
           t:= t + 0.5 * Random(3)
         else
-          t:= t + 0.5 * Random();
+          t:= t + 0.5;
       end;
       1: begin
         iX:= Universy_Size.X/2 + round(AVector2[Length(AVector2)-2].X * cos(t * pi / 180)) + iX;

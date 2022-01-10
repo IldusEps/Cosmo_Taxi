@@ -116,6 +116,7 @@
             ],
             "TranslationPersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
+              "X" : 9.1000000000000000E+004,
               "Z" : 2.0000000000000000E+000
             },
             "URL" : "castle-data:/rocket/Rocket.json"
@@ -166,7 +167,7 @@
       "$$ClassName" : "TCastleUserInterface",
       "Bottom" : 1.0000000000000000E+001,
       "Height" : 1.5000000000000000E+002,
-      "HorizontalAnchorDelta" : 1.0000000000000000E+001,
+      "HorizontalAnchorDelta" : 1.5000000000000000E+001,
       "Name" : "Radar_main",
       "Width" : 1.5000000000000000E+002,
       "$Children" : [
@@ -174,7 +175,6 @@
           "$$ClassName" : "TCastleUserInterface",
           "FullSize" : true,
           "Height" : 1.5000000000000000E+002,
-          "HorizontalAnchorDelta" : 1.5000000000000000E+001,
           "HorizontalAnchorParent" : "hpMiddle",
           "HorizontalAnchorSelf" : "hpMiddle",
           "Name" : "Radar",
@@ -189,12 +189,14 @@
             "SmoothScaling" : false,
             "URL" : "castle-data:/rocket/Rocket_mini.png"
           },
+          "Height" : 1.0000000000000000E+001,
           "HorizontalAnchorParent" : "hpMiddle",
           "HorizontalAnchorSelf" : "hpMiddle",
           "Name" : "Rocket_mini",
           "VerticalAnchorDelta" : 5.0000000000000000E+000,
           "VerticalAnchorParent" : "vpMiddle",
-          "VerticalAnchorSelf" : "vpMiddle"
+          "VerticalAnchorSelf" : "vpMiddle",
+          "Width" : 1.0000000000000000E+001
         }
       ]
     },
@@ -215,6 +217,24 @@
       "VerticalAnchorDelta" : -3.1350830078125000E+001,
       "VerticalAnchorParent" : "vpTop",
       "VerticalAnchorSelf" : "vpTop"
+    },
+    {
+      "$$ClassName" : "TCastleImageControl",
+      "Content" : {
+        "$$ClassName" : "TCastleImagePersistent",
+        "URL" : "castle-data:/radar/HintRadar.png"
+      },
+      "Exists" : false,
+      "HorizontalAnchorDelta" : -2.0000000000000000E+001,
+      "HorizontalAnchorParent" : "hpRight",
+      "HorizontalAnchorSelf" : "hpRight",
+      "Name" : "HintRadar",
+      "VerticalAnchorDelta" : 2.0000000000000000E+001
+    },
+    {
+      "$$ClassName" : "TCastleTimer",
+      "IntervalSeconds" : 5.0000000000000000E+000,
+      "Name" : "TimerHint"
     }
   ]
 }

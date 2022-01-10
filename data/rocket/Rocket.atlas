@@ -1,6 +1,6 @@
 
 Rocket.png
-size: 839,456
+size: 1024,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -13,49 +13,49 @@ Group 6
   index: -1
 Vector 5
   rotate: false
-  xy: 605, 116
+  xy: 839, 1
   size: 107, 70
   orig: 107, 70
   offset: 0, 0
   index: -1
 Group 4
   rotate: false
-  xy: 605, 188
+  xy: 171, 456
   size: 106, 29
   orig: 106, 29
   offset: 0, 0
   index: -1
 Group 5
   rotate: false
-  xy: 605, 64
+  xy: 1, 456
   size: 168, 50
   orig: 168, 50
   offset: 0, 0
   index: -1
 Vector 4
   rotate: false
-  xy: 713, 188
+  xy: 191, 487
   size: 18, 18
   orig: 18, 19
   offset: 0, 1
   index: -1
 Vector 1
   rotate: false
-  xy: 714, 136
+  xy: 225, 487
   size: 12, 13
   orig: 12, 13
   offset: 0, 0
   index: -1
 Vector 3
   rotate: false
-  xy: 728, 136
+  xy: 211, 487
   size: 12, 13
   orig: 13, 13
   offset: 0, 0
   index: -1
 Vector 2
   rotate: false
-  xy: 714, 116
+  xy: 171, 487
   size: 18, 18
   orig: 18, 18
   offset: 0, 0

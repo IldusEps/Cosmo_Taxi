@@ -16,7 +16,7 @@ public
   Collider: TBoxCollider;
   {parameters}
   IsNeedTaxi: Boolean;
-  TypeStation: Integer;
+  TypeStation: String;
   constructor Create(AOwner: TComponent; AScene: String; ATranslation: TVector2; Index: Integer);
 end;
 
@@ -36,7 +36,7 @@ begin
   Setup2D;
   TranslationXY:= ATranslation;
   Translation.Z:= 2;
-  Scale:= Vector3(3, 3, 1);
+  Scale:= Vector3(4, 4, 1);
   Name:= 'Asteroid' + IntToStr(Index);
 
   RBody := TRigidBody.Create(Self);

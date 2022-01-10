@@ -69,6 +69,7 @@ begin
       0: begin
         iX:= (Stations_offset_min + iX * t) * cos(t);
         iY:= (Stations_offset_min - iY * t) * sin(t);
+        Randomize;
         if Universy_Skips then
           t:= t + 0.5 * Random(3)
         else

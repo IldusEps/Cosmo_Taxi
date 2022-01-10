@@ -36,7 +36,7 @@ begin
   Setup2D;
   TranslationXY:= ATranslation;
   Translation.Z:= 2;
-  Scale:= Vector3(3, 3, 1);
+  Scale:= Vector3(4, 4, 1);
   Name:= 'Asteroid' + IntToStr(Index);
 
   RBody := TRigidBody.Create(Self);
@@ -46,7 +46,7 @@ begin
   RBody.Setup2D;
 
   Collider := TBoxCollider.Create(RBody);
-  Collider.Size := Vector3(LocalBoundingBox.Size.XY, 20);
+  Collider.Size := Vector3(BoundingBox.Size.XY, 20);
 
   RigidBody := RBody;
 
