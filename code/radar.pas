@@ -7,7 +7,7 @@ unit Radar;
 
 interface
 
-uses Classes,
+uses Classes, SysUtils,
   CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
   CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
   CastleGLImages, CastleTimeUtils;
@@ -27,7 +27,118 @@ TMap = class(TUIControlSizeable)
     procedure Update(const SecondsPassed: single; var HandleInput: boolean); override;
   end;
 
+type
+
+{ THintAsteroid }
+
+THintAsteroid = class(TComponent)
+  public
+    arrays: array of TCastleImageControl;
+    Names: TStringList;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Add(iXY: TVector2; XY_Display: TVector3; AName: String; Parent: TCastleUserInterface);
+end;
+
 implementation
+
+{ THintAsteroid }
+
+constructor THintAsteroid.Create(AOwner: TComponent);
+begin       
+  inherited Create(AOwner);
+  SetLength(arrays, 0);
+  Names:= TStringList.Create;
+end;
+
+destructor THintAsteroid.Destroy;
+begin
+  inherited Destroy;
+  Names.Clear;
+  Names.Free;
+end;
+
+procedure THintAsteroid.Add(iXY: TVector2; XY_Display: TVector3; AName: String;
+  Parent: TCastleUserInterface);
+var
+  DistanceLabel, NameLabel: TCastleLabel;
+  i, Distance: integer;
+  bool: Boolean;
+  X, Y: Double;
+begin
+  bool:= False;
+
+  if (abs(iXY.X) <= 100000) AND (abs(iXY.Y) <= 100000) AND ((abs(iXY.Y) > XY_Display.Y + 100) OR (abs(iXY.X) > XY_Display.X + 100)) then
+  begin
+    if Names.IndexOf(AName) = -1 then
+    begin
+      SetLength(arrays, Length(arrays) + 1);
+      i:= Length(arrays) - 1;
+      Names.Add(AName);
+      bool:= True;
+    end
+    else
+      i:= Names.IndexOf(AName);
+    if bool then
+    begin
+      arrays[i]:= TCastleImageControl.Create(Self);
+      arrays[i].URL:= 'castle-data:/radar/HintAsteroids.png';
+      arrays[i].Width:= 100;
+      arrays[i].Height:= 100;
+      Parent.InsertFront(arrays[i]);
+    end;
+    arrays[i].Exists:= True;
+
+    X:= XY_Display.Y * iXY.X / abs(iXY.Y);
+    if X = 1/0 then
+       X:= 0;
+    Y:= XY_Display.X * iXY.Y / abs(iXY.X);
+    if Y = 1/0 then
+       Y:= 0;
+    if Abs(X) < Abs(XY_Display.X) then
+    begin
+      arrays[i].Anchor(hpMiddle, hpMiddle, X / XY_Display.Z);
+      if iXY.Y > 0 then
+        arrays[i].Anchor(vpTop, vpTop, -5)
+      else
+        arrays[i].Anchor(vpBottom, vpBottom, 5);
+    end
+    else
+    begin
+      arrays[i].Anchor(vpMiddle, vpMiddle, Y / XY_Display.Z);
+      if iXY.X > 0 then
+        arrays[i].Anchor(hpRight, hpRight, -5)
+      else
+        arrays[i].Anchor(hpLeft, hpLeft, 5);
+    end;
+
+    Distance:= round(Sqrt(Sqr(iXY.X) + Sqr(iXY.Y)) / 100);
+    if bool then
+    begin
+      DistanceLabel:= TCastleLabel.Create(arrays[i]);
+      DistanceLabel.FontSize:= 25;
+      DistanceLabel.Caption:= IntToStr(round(Distance));
+      DistanceLabel.Anchor(hpMiddle, hpMiddle, 0);
+      DistanceLabel.Anchor(vpTop, vpTop, -10);
+      arrays[i].InsertFront(DistanceLabel);
+    end
+    else begin
+      TCastleLabel(arrays[i].Controls[0]).Caption:= IntToStr(round(Distance));
+    end;
+
+    if bool then
+    begin
+      NameLabel:= TCastleLabel.Create(arrays[i]);
+      NameLabel.FontSize:= 25;
+      NameLabel.Caption:= AName.Replace('_', '-');
+      NameLabel.Anchor(hpMiddle, hpMiddle, 0);
+      NameLabel.Anchor(vpTop, vpTop, -30);
+      arrays[i].InsertFront(NameLabel);
+    end;
+  end
+  else if Names.IndexOf(AName) <> -1 then
+    arrays[Names.IndexOf(AName)].Exists:= False;
+end;
 
 { TMap }
 

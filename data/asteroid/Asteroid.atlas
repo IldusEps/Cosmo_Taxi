@@ -1,13 +1,27 @@
 
 Asteroid.png
-size: 256,256
+size: 255,362
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 asteroid3
   rotate: false
-  xy: 0, 0
+  xy: 1, 1
   size: 252, 214
   orig: 252, 214
+  offset: 0, 0
+  index: -1
+IsNeedTaxi
+  rotate: false
+  xy: 1, 290
+  size: 175, 70
+  orig: 175, 70
+  offset: 0, 0
+  index: -1
+IsNotNeedTaxi
+  rotate: false
+  xy: 1, 217
+  size: 175, 71
+  orig: 175, 71
   offset: 0, 0
   index: -1

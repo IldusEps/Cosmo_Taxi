@@ -3,7 +3,8 @@ unit Station;
 interface
 uses Classes,
   CastleUIState, CastleScene, CastleLog, SysUtils, CastleVectors, CastleTransform,
-  CastleDebugTransform;
+  CastleDebugTransform, CastleImages, CastleGLImages, CastleUIControls, CastleControls,
+  Math;
 
 type
 
@@ -17,7 +18,11 @@ public
   {parameters}
   IsNeedTaxi: Boolean;
   TypeStation: String;
-  constructor Create(AOwner: TComponent; AScene: String; ATranslation: TVector2; Index: Integer);
+
+  {Radar}
+  mini: TCastleImageControl;
+  constructor Create(AOwner: TComponent; AScene: String; ATranslation: TVector2; Index: Integer; AIsNeedTaxi: Boolean = False);
+  function GenerateAsteroidName(Index: Integer): String;
 end;
 
 implementation
@@ -26,7 +31,7 @@ implementation
 { TStation }
 
 constructor TStation.Create(AOwner: TComponent; AScene: String;
-  ATranslation: TVector2; Index: Integer);
+  ATranslation: TVector2; Index: Integer; AIsNeedTaxi: Boolean);
 var
   Debug: TDebugTransform;
 begin
@@ -37,7 +42,16 @@ begin
   TranslationXY:= ATranslation;
   Translation.Z:= 2;
   Scale:= Vector3(4, 4, 1);
-  Name:= 'Asteroid' + IntToStr(Index);
+  Name:= GenerateAsteroidName(Index + round(Translation.X / 100));//'Asteroid' + IntToStr(Index);
+
+  IsNeedTaxi:= AIsNeedTaxi;
+  AutoAnimationLoop:= True;
+  AnimateSkipTicks:= 15;
+  if Random = 0 then
+    if IsNeedTaxi then
+      AutoAnimation:= 'IsNeedTaxi'
+    else
+      AutoAnimation:= 'IsNotNeedTaxi';
 
   RBody := TRigidBody.Create(Self);
   RBody.Gravity:= False;
@@ -53,6 +67,27 @@ begin
   Debug := TDebugTransform.Create(Self);
   Debug.Attach(Self);
   Debug.Exists := true;
+
+  {Radar}
+  mini:= TCastleImageControl.Create(Self);
+  case TypeStation of
+    'Fill': mini.URL:= 'castle-data:/Fill_mini.png';
+    'Boots': mini.URL:= 'castle-data:/Boots_mini.png';
+    else
+      mini.URL:= 'castle-data:/radar/Asteroid_mini.png';
+  end;
+  mini.Width:= 10;
+  mini.Height:= 10;
+end;
+
+function TStation.GenerateAsteroidName(Index: Integer): String;
+var
+  Word: String;
+begin                          
+  Randomize;
+  Word:= Chr(65 + Round(Random(26)));
+  Result:= Word + '_' + IntToStr(Round(Abs(RandG(Index.ToDouble, 99.0))));
+  WritelnLog(Result);
 end;
 
 end.

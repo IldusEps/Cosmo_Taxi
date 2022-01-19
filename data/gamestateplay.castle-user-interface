@@ -2,6 +2,14 @@
   "$$ClassName" : "TCastleUserInterface",
   "FullSize" : true,
   "Name" : "RootGroup",
+  "$NonVisualComponents" : [
+    {
+      "$$ClassName" : "TCastleFont",
+      "LoadCharacters" : "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+      "Name" : "Font1",
+      "URL" : "castle-data:/Geronideregulardemo-AL5n7.otf"
+    }
+  ],
   "$Children" : [
     {
       "$$ClassName" : "TCastleViewport",
@@ -14,13 +22,13 @@
         "Name" : "Camera",
         "Orthographic" : {
           "$$ClassName" : "TCastleOrthographic",
-          "Height" : 4.0000000000000000E+003,
           "Name" : "Orthographic",
           "OriginPersistent" : {
             "$$ClassName" : "TCastleVector2Persistent",
             "X" : 5.0000000000000000E-001
           },
-          "Scale" : 8.1873059272766113E-001
+          "Scale" : 3.6692965030670166E+000,
+          "Width" : 1.6000000000000000E+003
         },
         "Perspective" : {
           "$$ClassName" : "TCastlePerspective",
@@ -79,14 +87,22 @@
           },
           {
             "$$ClassName" : "TCastleScene",
+            "AnimateSkipTicks" : 15,
+            "AutoAnimation" : "IsNeedTaxi",
             "Collides" : false,
             "ExposeTransforms" : [
             ],
             "Name" : "Asteroid",
+            "ProcessEvents" : true,
             "RenderOptions" : {
               "$$ClassName" : "TCastleScene.TSceneRenderOptions",
               "BlendingSort" : "bs2D",
               "Name" : "RenderOptions"
+            },
+            "RotationPersistent" : {
+              "$$ClassName" : "TCastleVector4Persistent",
+              "W" : 1.1607530713081360E-001,
+              "Y" : 9.9999177455902100E-001
             },
             "ScalePersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
@@ -95,7 +111,8 @@
             },
             "TranslationPersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
-              "Z" : 3.0000000000000000E+000
+              "X" : -3.9365240478515625E+002,
+              "Z" : 4.8899654388427734E+001
             },
             "URL" : "castle-data:/asteroid/Asteroid.json",
             "Visible" : false
@@ -116,7 +133,6 @@
             ],
             "TranslationPersistent" : {
               "$$ClassName" : "TCastleVector3Persistent",
-              "X" : 9.1000000000000000E+004,
               "Z" : 2.0000000000000000E+000
             },
             "URL" : "castle-data:/rocket/Rocket.json"
@@ -222,9 +238,8 @@
       "$$ClassName" : "TCastleImageControl",
       "Content" : {
         "$$ClassName" : "TCastleImagePersistent",
-        "URL" : "castle-data:/radar/HintRadar.png"
+        "URL" : "castle-data:/hint/HintRadar.png"
       },
-      "Exists" : false,
       "HorizontalAnchorDelta" : -2.0000000000000000E+001,
       "HorizontalAnchorParent" : "hpRight",
       "HorizontalAnchorSelf" : "hpRight",
@@ -233,8 +248,63 @@
     },
     {
       "$$ClassName" : "TCastleTimer",
-      "IntervalSeconds" : 5.0000000000000000E+000,
+      "IntervalSeconds" : 1.5000000000000000E+001,
       "Name" : "TimerHint"
+    },
+    {
+      "$$ClassName" : "TCastleImageControl",
+      "Content" : {
+        "$$ClassName" : "TCastleImagePersistent",
+        "URL" : "castle-data:/hint/HintRocket.png"
+      },
+      "HorizontalAnchorDelta" : -2.0000000000000000E+001,
+      "HorizontalAnchorParent" : "hpRight",
+      "HorizontalAnchorSelf" : "hpRight",
+      "Name" : "HintRocket",
+      "VerticalAnchorDelta" : -1.6735083007812500E+002,
+      "VerticalAnchorParent" : "vpTop",
+      "VerticalAnchorSelf" : "vpTop"
+    },
+    {
+      "$$ClassName" : "TCastleImageControl",
+      "Content" : {
+        "$$ClassName" : "TCastleImagePersistent",
+        "URL" : "castle-data:/radar/HintAsteroids.png"
+      },
+      "Exists" : false,
+      "HorizontalAnchorDelta" : 1.4000000000000000E+001,
+      "Name" : "HintAsteroid",
+      "VerticalAnchorDelta" : -4.0000000000000000E+002,
+      "VerticalAnchorParent" : "vpMiddle",
+      "VerticalAnchorSelf" : "vpMiddle",
+      "$Children" : [
+        {
+          "$$ClassName" : "TCastleLabel",
+          "FontSize" : 2.5000000000000000E+001,
+          "HorizontalAnchorParent" : "hpMiddle",
+          "HorizontalAnchorSelf" : "hpMiddle",
+          "LineSpacing" : 1.0000000000000000E+000,
+          "Name" : "Distance",
+          "Text" : [
+            "120"
+          ],
+          "VerticalAnchorDelta" : -1.0000000000000000E+001,
+          "VerticalAnchorParent" : "vpTop",
+          "VerticalAnchorSelf" : "vpTop"
+        },
+        {
+          "$$ClassName" : "TCastleLabel",
+          "HorizontalAnchorParent" : "hpMiddle",
+          "HorizontalAnchorSelf" : "hpMiddle",
+          "Name" : "Label1",
+          "Text" : [
+            "B-20"
+          ],
+          "VerticalAnchorDelta" : -3.0000000000000000E+001,
+          "VerticalAnchorParent" : "vpTop",
+          "VerticalAnchorSelf" : "vpTop"
+        }
+      ]
     }
   ]
 }

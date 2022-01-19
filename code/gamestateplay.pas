@@ -44,6 +44,7 @@ type
     LabelFps: TCastleLabel;
     MainViewport: TCastleViewport;
     HintRadar: TCastleImageControl;
+    HintRocket: TCastleImageControl;
     TimerHint: TCastleTimer;
 
     { Rocket parameters }
@@ -54,8 +55,9 @@ type
     Rocket_mini: TCastleImageControl;
     RadarDesign: TCastleUserInterface;
     Radar: TMap;
-    Stations_mini: array of TCastleImageControl;
     RadarZoom: Integer;
+
+    HintAsteroids: THintAsteroid;
 
     { Background }
     Background, Background_main: TCastleScene;
@@ -76,7 +78,8 @@ type
     procedure Update(const SecondsPassed: Single; var HandleInput: Boolean); override;
     function Press(const Event: TInputPressRelease): Boolean; override;
 
-    procedure Hint(Sender: TObject);
+    procedure HintingRadar(Sender: TObject);
+    procedure HintingRocket(Sender: TObject);
   end;
 
 var
@@ -127,9 +130,11 @@ begin
   CheckboxCameraFollow := DesignedComponent('CheckboxCameraFollow') as TCastleCheckbox;
   Radar_main := DesignedComponent('Radar_main') as TCastleUserInterface;
 
+  { Hint }
   HintRadar:= DesignedComponent('HintRadar') as TCastleImageControl;
+  HintRocket:= DesignedComponent('HintRocket') as TCastleImageControl;
   TimerHint:= DesignedComponent('TimerHint') as TCastleTimer;
-  TimerHint.OnTimer:= @Hint;
+  TimerHint.OnTimer:= @HintingRadar;
 
   { Scenes }
   SceneRocket := DesignedComponent('SceneRocket') as TCastleScene;
@@ -163,8 +168,8 @@ begin
 
   _backgroundOriginalSizeX := Background_main.BoundingBox.SizeX;
   _backgroundOriginalSizeY := Background_main.BoundingBox.SizeY;
-  Background_size.X:= (MainViewport.Camera.Orthographic.Height * MainViewport.Camera.Orthographic.Scale) * RenderRect.Width / RenderRect.Height + _backgroundOriginalSizeX * 3;
-  Background_size.Y:= MainViewport.Camera.Orthographic.Height * MainViewport.Camera.Orthographic.Scale + _backgroundOriginalSizeY * 3;
+  Background_size.X:= MainViewport.Camera.Orthographic.EffectiveWidth + _backgroundOriginalSizeX * 5;//(MainViewport.Camera.Orthographic.Height * MainViewport.Camera.Orthographic.Scale) * RenderRect.Width / RenderRect.Height;
+  Background_size.Y:= MainViewport.Camera.Orthographic.EffectiveHeight + _backgroundOriginalSizeY * 5;//MainViewport.Camera.Orthographic.Height * MainViewport.Camera.Orthographic.Scale + _backgroundOriginalSizeY * 5;
 
   iX:= 0;
   iY:= 0;
@@ -208,7 +213,6 @@ begin
 
   { Stations }
   SetLength(Stations, 127);
-  SetLength(Stations_mini, Length(Stations));
   Universy.SetVectors2(Length(Stations)-1);
 
   for i:= 0 to Length(Stations)-1 do
@@ -217,15 +221,6 @@ begin
     i);
     MainViewport.Items.Insert(1, Stations[i]);
 
-    Stations_mini[i]:= TCastleImageControl.Create(Self);
-    case Stations[i].TypeStation of
-      'Fill': Stations_mini[i].URL:= 'castle-data:/Fill_mini.png';
-      'Boots': Stations_mini[i].URL:= 'castle-data:/Boots_mini.png';
-      else
-        Stations_mini[i].URL:= 'castle-data:/radar/Asteroid_mini.png';
-    end;
-    Stations_mini[i].Width:= 10;
-    Stations_mini[i].Height:= 10;
     iX:= round(round(Stations[i].Translation.X) - round(SceneRocket.Translation.X) / 200);
     iY:= round(round(Stations[i].Translation.Y) - round(SceneRocket.Translation.Y) / 200);
     if Abs(iX) > 50 then
@@ -236,11 +231,12 @@ begin
       iY := 100
     else if iY < 10 then
       iY := 10;
-    Stations_mini[i].Anchor(hpLeft, hpLeft, iX);
-    Stations_mini[i].Anchor(vpBottom, vpBottom, iY);
+    Stations[i].mini.Anchor(hpLeft, hpLeft, iX);
+    Stations[i].mini.Anchor(vpBottom, vpBottom, iY);
 
-    Radar_main.InsertFront(Stations_mini[i]);
+    Radar_main.InsertFront(Stations[i].mini);
   end;
+  HintAsteroids:= THintAsteroid.Create(Self);
 
   { Parameters }
   Rocket:= TRocket.Create;
@@ -249,7 +245,7 @@ begin
   Rocket.AddSpeed:= 0.3;
   Rocket.BaseRotation:= 0.01;
   Rocket.Scene:= SceneRocket;
-  RadarZoom:= 1800;
+  RadarZoom:= 2000;
 
   // Debuging
   //Background_main.Visible:= False;
@@ -273,7 +269,7 @@ end;
 procedure TStatePlay.Update(const SecondsPassed: Single; var HandleInput: Boolean);
 var
   CamPos: TVector3;
-  Trans, Radius: TVector2;
+  Trans, Radius, Display_XY: TVector2;
   i, iX, iY, u: integer;
   T: TCastleTransform;
 
@@ -306,7 +302,7 @@ begin
   begin
     CamPos := MainViewport.Camera.Position;
     CamPos.X := SceneRocket.Translation.X;
-    CamPos.Y := SceneRocket.Translation.Y - (MainViewport.Camera.Orthographic.Height * MainViewport.Camera.Orthographic.Scale) / 2;
+    CamPos.Y := SceneRocket.Translation.Y - MainViewport.Camera.Orthographic.EffectiveHeight / 2;
     MainViewport.Camera.Position := CamPos;
   end;
 
@@ -349,6 +345,8 @@ begin
   { ImageControls }
   Rocket_mini.Rotation := Rocket.Rotation;
 
+  Display_XY:= Vector2(MainViewport.Camera.Orthographic.EffectiveWidth / 2,
+        MainViewport.Camera.Orthographic.EffectiveHeight / 2);
   for i := 0 to Length(Stations) - 1 do
   begin
     iX:= round((round(Stations[i].Translation.X) - round(SceneRocket.Translation.X)) / RadarZoom);
@@ -384,9 +382,16 @@ begin
       else
       begin
         iY:= -100;
-      end;
-    Stations_mini[i].Anchor(hpMiddle, hpMiddle, iX);
-    Stations_mini[i].Anchor(vpMiddle, vpMiddle, iY);
+      end;  
+    Stations[i].mini.Anchor(hpMiddle, hpMiddle, iX);
+    Stations[i].mini.Anchor(vpMiddle, vpMiddle, iY);
+    iX:= round(Stations[i].Translation.X - SceneRocket.Translation.X);
+    iY:= round(Stations[i].Translation.Y - SceneRocket.Translation.Y);
+
+    HintAsteroids.Add(Vector2(iX, iY),
+      Vector3(Display_XY.X, Display_XY.Y, MainViewport.Camera.Orthographic.Scale),
+      Stations[i].Name,
+      Self);
   end;
 end;
 
@@ -394,13 +399,16 @@ function TStatePlay.Press(const Event: TInputPressRelease): Boolean;
 
   procedure HintClose;
   begin
-    if NOT(TimerHint.Exists) then
+    if HintRadar.Exists then
     begin
       HintRadar.Exists:= False;
-      TimerHint.Exists:= True;
+      TimerHint.Exists:= True; 
+      TimerHint.OnTimer:= @HintingRadar;
+      if HintRocket.Exists then
+        HintRocket.Exists:= False;
     end
     else
-      TimerHint.IntervalSeconds:= 5;
+      TimerHint.IntervalSeconds:= 15;
   end;
 
 begin
@@ -467,16 +475,21 @@ begin
   begin
     if (RadarZoom < 2000000) then
      RadarZoom:= RadarZoom + 200;
+    HintClose;
   end
   else
   if Event.IsKey(keyZ) then
   begin
     if (RadarZoom > 1000) then
      RadarZoom:= RadarZoom - 200;
+    HintClose;
   end
   else
   if Event.IsKey(keyC) then
-    RadarZoom:= 1800;
+  begin
+    RadarZoom:= 2000;
+    HintClose;
+  end;
 
   if Event.IsKey(keyF5) then
   begin
@@ -491,10 +504,18 @@ begin
   end;
 end;
 
-procedure TStatePlay.Hint(Sender: TObject);
+procedure TStatePlay.HintingRadar(Sender: TObject);
 begin
   HintRadar.Exists:= True;
+  TimerHint.IntervalSeconds:= 30;
+  TimerHint.OnTimer:= @HintingRocket;
+end;
+
+procedure TStatePlay.HintingRocket(Sender: TObject);
+begin
+  HintRocket.Exists:= True;
   TimerHint.Exists:= False;
+  TimerHint.OnTimer:= @HintingRadar;
 end;
 
 
