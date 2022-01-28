@@ -10,7 +10,8 @@ interface
 uses Classes,
   CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
   CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
-  CastleGLImages, CastleTransform, Radar, Station, Universy, CastleDebugTransform;
+  CastleGLImages, CastleTransform, Radar, Station, Universy, CastleDebugTransform,
+  CastleColors;
 
 
 { classes }
@@ -50,6 +51,7 @@ type
     { Rocket parameters }
     SceneRocket: TCastleScene;
     Rocket: TRocket;
+    StationIndex: Integer;
 
     { Radar }  
     Rocket_mini: TCastleImageControl;
@@ -65,6 +67,9 @@ type
 
     {Stations}
     Stations: array of TStation;
+
+    { Mechanics }
+    Space_on_Start: TCastleImageControl;
 
     { Universy }
     Universy: TUniversy;
@@ -129,6 +134,9 @@ begin
   MainViewport := DesignedComponent('MainViewport') as TCastleViewport;
   CheckboxCameraFollow := DesignedComponent('CheckboxCameraFollow') as TCastleCheckbox;
   Radar_main := DesignedComponent('Radar_main') as TCastleUserInterface;
+
+  { Mechanics }
+  Space_on_Start:= DesignedComponent('Space_on_Start') as TCastleImageControl;
 
   { Hint }
   HintRadar:= DesignedComponent('HintRadar') as TCastleImageControl;
@@ -217,12 +225,14 @@ begin
 
   for i:= 0 to Length(Stations)-1 do
   begin
-    Stations[i]:= TStation.Create(Self, 'castle-data:/asteroid/Asteroid.json', Universy.GetVector2,
+    Background_size:= Universy.GetVector2;
+    Stations[i]:= TStation.Create(Self, 'castle-data:/asteroid/Asteroid.json', Background_size,
     i);
+    WritelnLog(IntToStr(i) + ': ' + Background_size.ToString);
     MainViewport.Items.Insert(1, Stations[i]);
 
-    iX:= round(round(Stations[i].Translation.X) - round(SceneRocket.Translation.X) / 200);
-    iY:= round(round(Stations[i].Translation.Y) - round(SceneRocket.Translation.Y) / 200);
+    iX:= round(round(Stations[i].Translation.X - SceneRocket.Translation.X) / 200);
+    iY:= round(round(Stations[i].Translation.Y - SceneRocket.Translation.Y) / 200);
     if Abs(iX) > 50 then
       iX := 100
     else if iX < 10 then
@@ -246,6 +256,10 @@ begin
   Rocket.BaseRotation:= 0.01;
   Rocket.Scene:= SceneRocket;
   RadarZoom:= 2000;
+  Randomize;
+  StationIndex:= Random(Length(Stations));
+  Stations[StationIndex].IsNeedTaxi:= True;
+  Stations[StationIndex].IsDestination:= True;
 
   // Debuging
   //Background_main.Visible:= False;
@@ -325,8 +339,6 @@ begin
   { Collides }
     Rocket.LabelRocket.Text[0] := ('Speed_Y: ' + FloatToStr(Rocket.Speed.Y));
     Rocket.LabelRocket.Text[1] := ('Speed_X: ' + FloatToStr(Rocket.Speed.X));
-    //Rocket.LabelRocket.Text[2] := ('cos(Rotation): ' + FloatToStr(cos(Rocket.Rotation)));
-    //Rocket.LabelRocket.Text[3] := ('Landing: ' + BoolToStr(Rocket.Landing, True));
     Rocket.LabelRocket.Text[5] := ('Translation_X: ' + FloatToStr(SceneRocket.Translation.X));
 
   for i := 0 to SceneRocket.RigidBody.GetCollidingTransforms.Count - 1 do
@@ -339,6 +351,7 @@ begin
        AND (Rocket.Speed.X <= 10) AND (cos(Rocket.Rotation) >= 0.98) then
       begin
         Rocket.Land;
+        Space_on_Start.Exists:= True;
       end;
     end;
 
@@ -361,7 +374,7 @@ begin
     if iX < 0 then
       u:= -1;
     if (abs(iX) > 50) then
-      if (abs(iX) < 70) then
+      if (abs(iX) < 70) OR (Stations[i].IsDestination) then
       begin
         iX:= min(abs(iX), abs(round(getRadius(Vector2(iX, iY)).X)));
         iX:= u * iX;
@@ -374,7 +387,7 @@ begin
     if iY < 0 then
       u:= -1;
     if (abs(iY) > 50) then
-      if (abs(iY) < 70) then
+      if (abs(iY) < 70) OR (Stations[i].IsDestination) then
       begin
         iY:= min(abs(iY), abs(round(getRadius(Vector2(iX, iY)).Y)));
         iY:= u * iY;
@@ -382,7 +395,14 @@ begin
       else
       begin
         iY:= -100;
-      end;  
+      end;
+    if Stations[i].IsDestination then
+    begin
+       Stations[i].mini.ColorPersistent.Blue:= 0.4352941;
+       Stations[i].mini.ColorPersistent.Alpha:= 1;
+    end
+    else
+       Stations[i].mini.ColorPersistent.Blue:= 1;
     Stations[i].mini.Anchor(hpMiddle, hpMiddle, iX);
     Stations[i].mini.Anchor(vpMiddle, vpMiddle, iY);
     iX:= round(Stations[i].Translation.X - SceneRocket.Translation.X);
@@ -390,7 +410,8 @@ begin
 
     HintAsteroids.Add(Vector2(iX, iY),
       Vector3(Display_XY.X, Display_XY.Y, MainViewport.Camera.Orthographic.Scale),
-      Stations[i].Name,
+      Stations[i].CaptionStation,
+      Stations[i].IsDestination,
       Self);
   end;
 end;
@@ -468,6 +489,7 @@ begin
         Rocket.Landing:= False;
         HintClose;
         Rocket.Speed.Y:= 3;
+        Space_on_Start.Exists:= False;
       end;
     end;
 

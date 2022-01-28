@@ -37,7 +37,8 @@ THintAsteroid = class(TComponent)
     Names: TStringList;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure Add(iXY: TVector2; XY_Display: TVector3; AName: String; Parent: TCastleUserInterface);
+    procedure Add(iXY: TVector2; XY_Display: TVector3; AName: String;
+      IsDestination: Boolean; Parent: TCastleUserInterface);
 end;
 
 implementation
@@ -59,7 +60,7 @@ begin
 end;
 
 procedure THintAsteroid.Add(iXY: TVector2; XY_Display: TVector3; AName: String;
-  Parent: TCastleUserInterface);
+  IsDestination: Boolean; Parent: TCastleUserInterface);
 var
   DistanceLabel, NameLabel: TCastleLabel;
   i, Distance: integer;
@@ -68,7 +69,7 @@ var
 begin
   bool:= False;
 
-  if (abs(iXY.X) <= 100000) AND (abs(iXY.Y) <= 100000) AND ((abs(iXY.Y) > XY_Display.Y + 100) OR (abs(iXY.X) > XY_Display.X + 100)) then
+  if (((abs(iXY.X) <= 100000) AND (abs(iXY.Y) <= 100000)) OR IsDestination) AND ((abs(iXY.Y) > XY_Display.Y + 100) OR (abs(iXY.X) > XY_Display.X + 100)) then
   begin
     if Names.IndexOf(AName) = -1 then
     begin

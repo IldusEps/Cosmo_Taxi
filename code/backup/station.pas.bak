@@ -11,17 +11,26 @@ type
 { TStation }
 
 TStation = class(TCastleScene)
+private              
+  {parameters}
+  AIsNeedTaxi, AIsDestination: Boolean;
+  ATypeStation: String;
+  procedure SetIsDestination(AValue: Boolean);
+  procedure SetIsNeedTaxi(AValue: Boolean);
+  procedure SetTypeStation(AValue: String);
 public
   //Scene: TCastleScene; 
   RBody: TRigidBody;
   Collider: TBoxCollider;
-  {parameters}
-  IsNeedTaxi: Boolean;
-  TypeStation: String;
-
+  CaptionStation: String;
   {Radar}
   mini: TCastleImageControl;
-  constructor Create(AOwner: TComponent; AScene: String; ATranslation: TVector2; Index: Integer; AIsNeedTaxi: Boolean = False);
+
+  property TypeStation: String read ATypeStation write SetTypeStation;
+  property IsNeedTaxi: Boolean read AIsNeedTaxi write SetIsNeedTaxi;
+  property IsDestination: Boolean read AIsDestination write SetIsDestination;
+
+  constructor Create(AOwner: TComponent; AScene: String; ATranslation: TVector2; Index: Integer; BIsNeedTaxi: Boolean = False);
   function GenerateAsteroidName(Index: Integer): String;
 end;
 
@@ -30,8 +39,44 @@ implementation
 
 { TStation }
 
+procedure TStation.SetIsDestination(AValue: Boolean);
+begin
+  if AIsDestination = AValue then Exit;
+
+  if AValue then
+    mini.URL:= 'castle-data:/radar/Destination_mini.png'
+  else
+    SetTypeStation(TypeStation);
+  AIsDestination:= AValue;
+end;
+
+procedure TStation.SetIsNeedTaxi(AValue: Boolean);
+begin
+  if AIsNeedTaxi = AValue then Exit;
+
+  if AValue then
+    AutoAnimation:= 'IsNeedTaxi'
+  else
+    AutoAnimation:= 'IsNotNeedTaxi';
+  AIsNeedTaxi:= AValue;
+end;
+
+procedure TStation.SetTypeStation(AValue: String);
+begin
+  if ATypeStation = AValue then Exit;
+
+  if IsDestination = false then
+    case AValue of
+      'Fill': mini.URL:= 'castle-data:/radar/Fill_mini.png';
+      'Boots': mini.URL:= 'castle-data:/radar/Boots_mini.png';
+      else
+        mini.URL:= 'castle-data:/radar/Asteroid_mini.png';
+    end;
+  ATypeStation:= AValue;
+end;
+
 constructor TStation.Create(AOwner: TComponent; AScene: String;
-  ATranslation: TVector2; Index: Integer; AIsNeedTaxi: Boolean);
+  ATranslation: TVector2; Index: Integer; BIsNeedTaxi: Boolean);
 var
   Debug: TDebugTransform;
 begin
@@ -42,16 +87,13 @@ begin
   TranslationXY:= ATranslation;
   Translation.Z:= 2;
   Scale:= Vector3(4, 4, 1);
-  Name:= GenerateAsteroidName(Index + round(Translation.X / 100));//'Asteroid' + IntToStr(Index);
+  Name:= 'Asteroid' + IntToStr(Index);
+  CaptionStation:= GenerateAsteroidName(Index + round(Translation.X / 100));
 
   IsNeedTaxi:= AIsNeedTaxi;
+  AIsDestination:= False;
   AutoAnimationLoop:= True;
   AnimateSkipTicks:= 15;
-  if Random = 0 then
-    if IsNeedTaxi then
-      AutoAnimation:= 'IsNeedTaxi'
-    else
-      AutoAnimation:= 'IsNotNeedTaxi';
 
   RBody := TRigidBody.Create(Self);
   RBody.Gravity:= False;
@@ -85,8 +127,8 @@ var
   Word: String;
 begin                          
   Randomize;
-  Word:= Chr(64 + Round(Random(26)));
-  Result:= Word + '_' + IntToStr(Round(Abs(RandG(Index.ToDouble, 99.0))));
+  Word:= Chr(65 + Round(Random(26)));
+  Result:= Word + '_' + IntToStr(Round(Abs(RandG((Index.ToDouble)/1000, 99.0))));
   WritelnLog(Result);
 end;
 

@@ -52,26 +52,23 @@ begin
   SetLength(AVector2, Length(AVector2) + 1);
   Randomize;
   iX:= Random(Stations_offset_max - Stations_offset_min) + Stations_offset_min;
-  Randomize;
   iY:= Random(Stations_offset_max - Stations_offset_min) + Stations_offset_min;
   AVector2[Length(AVector2)-1]:= Vector2(iX, iY);
-  t:= 0;
+  t:= 0;  
 
+  Randomize;
   for i:= 0 to Count do
   begin
     SetLength(AVector2, Length(AVector2) + 1);
-    Randomize;
     iX:= Random(Stations_offset_max - Stations_offset_min) + Stations_offset_min;
-    Randomize;
     iY:= Random(Stations_offset_max - Stations_offset_min) + Stations_offset_min;
 
     case Equation of
       0: begin
         iX:= (Stations_offset_min + iX * t) * cos(t);
         iY:= (Stations_offset_min - iY * t) * sin(t);
-        Randomize;
         if Universy_Skips then
-          t:= t + 0.5 * Random(3)
+          t:= t + 0.5 * Random(3 + round(t))
         else
           t:= t + 0.5;
       end;

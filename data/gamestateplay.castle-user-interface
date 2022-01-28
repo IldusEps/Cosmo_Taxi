@@ -7,7 +7,7 @@
       "$$ClassName" : "TCastleFont",
       "LoadCharacters" : "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя",
       "Name" : "Font1",
-      "URL" : "castle-data:/Geronideregulardemo-AL5n7.otf"
+      "URL" : "castle-data:/rollfast-black.otf"
     }
   ],
   "$Children" : [
@@ -269,6 +269,10 @@
       "$$ClassName" : "TCastleImageControl",
       "Content" : {
         "$$ClassName" : "TCastleImagePersistent",
+        "ColorPersistent" : {
+          "$$ClassName" : "TCastleColorPersistent",
+          "Alpha" : 4.3529409170150757E-001
+        },
         "URL" : "castle-data:/radar/HintAsteroids.png"
       },
       "Exists" : false,
@@ -303,6 +307,46 @@
           "VerticalAnchorDelta" : -3.0000000000000000E+001,
           "VerticalAnchorParent" : "vpTop",
           "VerticalAnchorSelf" : "vpTop"
+        }
+      ]
+    },
+    {
+      "$$ClassName" : "TCastleImageControl",
+      "Content" : {
+        "$$ClassName" : "TCastleImagePersistent",
+        "URL" : "castle-data:/Panel.png"
+      },
+      "Exists" : false,
+      "Height" : 1.5000000000000000E+002,
+      "HorizontalAnchorParent" : "hpMiddle",
+      "HorizontalAnchorSelf" : "hpMiddle",
+      "Name" : "Space_on_Start",
+      "Stretch" : true,
+      "VerticalAnchorDelta" : 2.0000000000000000E+002,
+      "VerticalAnchorParent" : "vpMiddle",
+      "VerticalAnchorSelf" : "vpMiddle",
+      "Width" : 3.5000000000000000E+002,
+      "$Children" : [
+        {
+          "$$ClassName" : "TCastleLabel",
+          "ColorPersistent" : {
+            "$$ClassName" : "TCastleColorPersistent",
+            "Blue" : 1.0000000000000000E+000,
+            "Green" : 1.0000000000000000E+000,
+            "Red" : 1.0000000000000000E+000
+          },
+          "CustomFont" : "Font1",
+          "FontScale" : 1.5000000000000000E+000,
+          "HorizontalAnchorParent" : "hpMiddle",
+          "HorizontalAnchorSelf" : "hpMiddle",
+          "LineSpacing" : 1.0000000000000000E+001,
+          "Name" : "Label2",
+          "Text" : [
+            "Нажмите \"Пробел\"",
+            "для взлета"
+          ],
+          "VerticalAnchorParent" : "vpMiddle",
+          "VerticalAnchorSelf" : "vpMiddle"
         }
       ]
     }
