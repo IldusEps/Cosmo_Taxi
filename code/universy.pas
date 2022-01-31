@@ -2,7 +2,7 @@ unit Universy;
 
 interface
 uses
-CastleVectors;
+CastleVectors, CastleLog;
 
 type
 
@@ -28,7 +28,7 @@ implementation
 const
   { Stations Sizes and offset }
   Stations_offset_max = 200000;//100000;
-  Stations_offset_min = 500;
+  Stations_offset_min = 1000;
 
 
 { TUniversy }
@@ -67,8 +67,9 @@ begin
       0: begin
         iX:= (Stations_offset_min + iX * t) * cos(t);
         iY:= (Stations_offset_min - iY * t) * sin(t);
+        WritelnLog(FloatToNiceStr(round(t)));
         if Universy_Skips then
-          t:= t + 0.5 * Random(3 + round(t))
+          t:= t + 0.5 * (Random(round(t)) + 1)
         else
           t:= t + 0.5;
       end;

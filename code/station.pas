@@ -88,7 +88,7 @@ begin
   Translation.Z:= 2;
   Scale:= Vector3(4, 4, 1);
   Name:= 'Asteroid' + IntToStr(Index);
-  CaptionStation:= GenerateAsteroidName(Index + round(Translation.X / 100));
+  CaptionStation:= GenerateAsteroidName(Index);
 
   IsNeedTaxi:= AIsNeedTaxi;
   AIsDestination:= False;
@@ -128,7 +128,7 @@ var
 begin                          
   Randomize;
   Word:= Chr(65 + Round(Random(26)));
-  Result:= Word + '_' + IntToStr(Round(Abs(RandG((Index.ToDouble)/10, 99.0))));
+  Result:= Word + '_' + IntToStr(Round(Abs(RandG((Index.ToDouble)/200, 99.0))));
   WritelnLog(Result);
 end;
 

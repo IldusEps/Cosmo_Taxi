@@ -221,14 +221,15 @@ begin
 
   { Stations }
   SetLength(Stations, 127);
+  Universy.Universy_Skips:= False;
   Universy.SetVectors2(Length(Stations)-1);
 
   for i:= 0 to Length(Stations)-1 do
   begin
-    Background_size:= Universy.GetVector2;
-    Stations[i]:= TStation.Create(Self, 'castle-data:/asteroid/Asteroid.json', Background_size,
+    //Background_size:= Universy.GetVector2;
+    Stations[i]:= TStation.Create(Self, 'castle-data:/asteroid/Asteroid.json', Universy.GetVector2,
     i);
-    WritelnLog(IntToStr(i) + ': ' + Background_size.ToString);
+    //WritelnLog(IntToStr(i) + ': ' + Background_size.ToString);
     MainViewport.Items.Insert(1, Stations[i]);
 
     iX:= round(round(Stations[i].Translation.X - SceneRocket.Translation.X) / 200);
@@ -241,11 +242,14 @@ begin
       iY := 100
     else if iY < 10 then
       iY := 10;
+    WritelnLog('Tut2');
     Stations[i].mini.Anchor(hpLeft, hpLeft, iX);
     Stations[i].mini.Anchor(vpBottom, vpBottom, iY);
 
-    Radar_main.InsertFront(Stations[i].mini);
+    Radar_main.InsertFront(Stations[i].mini); 
+    WritelnLog('Tut4 _ ' + IntToStr(i));
   end;
+  WritelnLog('Tut3');
   HintAsteroids:= THintAsteroid.Create(Self);
 
   { Parameters }
