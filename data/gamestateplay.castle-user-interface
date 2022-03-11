@@ -180,43 +180,6 @@
       "VerticalAnchorSelf" : "vpTop"
     },
     {
-      "$$ClassName" : "TCastleUserInterface",
-      "Bottom" : 1.0000000000000000E+001,
-      "Height" : 1.5000000000000000E+002,
-      "HorizontalAnchorDelta" : 1.5000000000000000E+001,
-      "Name" : "Radar_main",
-      "Width" : 1.5000000000000000E+002,
-      "$Children" : [
-        {
-          "$$ClassName" : "TCastleUserInterface",
-          "FullSize" : true,
-          "Height" : 1.5000000000000000E+002,
-          "HorizontalAnchorParent" : "hpMiddle",
-          "HorizontalAnchorSelf" : "hpMiddle",
-          "Name" : "Radar",
-          "VerticalAnchorParent" : "vpMiddle",
-          "VerticalAnchorSelf" : "vpMiddle",
-          "Width" : 1.5000000000000000E+002
-        },
-        {
-          "$$ClassName" : "TCastleImageControl",
-          "Content" : {
-            "$$ClassName" : "TCastleImagePersistent",
-            "SmoothScaling" : false,
-            "URL" : "castle-data:/rocket/Rocket_mini.png"
-          },
-          "Height" : 1.0000000000000000E+001,
-          "HorizontalAnchorParent" : "hpMiddle",
-          "HorizontalAnchorSelf" : "hpMiddle",
-          "Name" : "Rocket_mini",
-          "VerticalAnchorDelta" : 5.0000000000000000E+000,
-          "VerticalAnchorParent" : "vpMiddle",
-          "VerticalAnchorSelf" : "vpMiddle",
-          "Width" : 1.0000000000000000E+001
-        }
-      ]
-    },
-    {
       "$$ClassName" : "TCastleLabel",
       "ColorPersistent" : {
         "$$ClassName" : "TCastleColorPersistent",
@@ -347,6 +310,66 @@
           ],
           "VerticalAnchorParent" : "vpMiddle",
           "VerticalAnchorSelf" : "vpMiddle"
+        }
+      ]
+    },
+    {
+      "$$ClassName" : "TCastleUserInterface",
+      "Name" : "Group1",
+      "$Children" : [
+        {
+          "$$ClassName" : "TCastleUserInterface",
+          "Bottom" : 1.0000000000000000E+001,
+          "Height" : 1.5000000000000000E+002,
+          "Name" : "Radar_main",
+          "Width" : 1.5000000000000000E+002,
+          "$Children" : [
+            {
+              "$$ClassName" : "TCastleUserInterface",
+              "FullSize" : true,
+              "Height" : 1.5000000000000000E+002,
+              "HorizontalAnchorParent" : "hpMiddle",
+              "HorizontalAnchorSelf" : "hpMiddle",
+              "Name" : "Radar",
+              "VerticalAnchorParent" : "vpMiddle",
+              "VerticalAnchorSelf" : "vpMiddle",
+              "Width" : 1.5000000000000000E+002
+            },
+            {
+              "$$ClassName" : "TCastleImageControl",
+              "Content" : {
+                "$$ClassName" : "TCastleImagePersistent",
+                "SmoothScaling" : false,
+                "URL" : "castle-data:/rocket/Rocket_mini.png"
+              },
+              "Height" : 1.0000000000000000E+001,
+              "HorizontalAnchorParent" : "hpMiddle",
+              "HorizontalAnchorSelf" : "hpMiddle",
+              "Name" : "Rocket_mini",
+              "VerticalAnchorDelta" : 5.0000000000000000E+000,
+              "VerticalAnchorParent" : "vpMiddle",
+              "VerticalAnchorSelf" : "vpMiddle",
+              "Width" : 1.0000000000000000E+001
+            }
+          ]
+        },
+        {
+          "$$ClassName" : "TCastleUserInterface",
+          "Border" : {
+            "$$ClassName" : "TBorder",
+            "AllSides" : 2.0000000000000000E+002
+          },
+          "BorderColorPersistent" : {
+            "$$ClassName" : "TCastleColorPersistent",
+            "Alpha" : 1.0000000000000000E+000,
+            "Green" : 9.4117647409439087E-001,
+            "Red" : 9.8823529481887817E-001
+          },
+          "Height" : 3.0000000000000000E+001,
+          "HorizontalAnchorDelta" : 1.6500000000000000E+002,
+          "Name" : "IsTaxi",
+          "VerticalAnchorDelta" : 1.0000000000000000E+001,
+          "Width" : 3.0000000000000000E+001
         }
       ]
     }

@@ -1,0 +1,43 @@
+unit Profile;
+
+interface
+uses CastleConfig;
+
+type
+
+  { TProfile }
+
+  TProfile = class
+    Money: Integer;
+    { Rocket parameters }
+    BaseSpeed: Double;
+    AddSpeed: Double;
+    BaseRotation: Double;
+
+    constructor Create;
+    procedure Save;
+  end;
+
+implementation
+
+{ TProfile }
+
+constructor TProfile.Create;
+begin
+  UserConfig.Load;                                  
+  Money := UserConfig.GetInteger('Money', 1000);
+  BaseSpeed := UserConfig.GetFloat('BaseSpeed', 0.5);
+  AddSpeed := UserConfig.GetFloat('AddSpeed', 0.3);
+  BaseRotation := UserConfig.GetFloat('BaseRotation', 0.01);
+end;
+
+procedure TProfile.Save;
+begin              
+  UserConfig.SetValue('Money', Money);
+  UserConfig.SetFloat('BaseSpeed', BaseSpeed);
+  UserConfig.SetFloat('AddSpeed', AddSpeed);
+  UserConfig.SetFloat('BaseRotation', BaseRotation);
+  UserConfig.Save;
+end;
+
+end.

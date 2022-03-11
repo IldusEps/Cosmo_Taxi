@@ -19,13 +19,13 @@ private
   procedure SetIsNeedTaxi(AValue: Boolean);
   procedure SetTypeStation(AValue: String);
 public
-  //Scene: TCastleScene; 
   RBody: TRigidBody;
   Collider: TBoxCollider;
   CaptionStation: String;
   {Radar}
   mini: TCastleImageControl;
 
+  Price: Integer;
   property TypeStation: String read ATypeStation write SetTypeStation;
   property IsNeedTaxi: Boolean read AIsNeedTaxi write SetIsNeedTaxi;
   property IsDestination: Boolean read AIsDestination write SetIsDestination;
@@ -44,7 +44,10 @@ begin
   if AIsDestination = AValue then Exit;
 
   if AValue then
-    mini.URL:= 'castle-data:/radar/Destination_mini.png'
+  begin
+    mini.URL:= 'castle-data:/radar/Destination_mini.png';
+    Price:= Random() + 500;
+  end
   else
     SetTypeStation(TypeStation);
   AIsDestination:= AValue;
@@ -95,7 +98,6 @@ begin
   AutoAnimationLoop:= True;
   AnimateSkipTicks:= 15;
 
-  WritelnLog('Tut1___');
   RBody := TRigidBody.Create(Self);
   RBody.Gravity:= False;
   RBody.Dynamic:= True;
@@ -105,13 +107,11 @@ begin
   Collider := TBoxCollider.Create(RBody);
   Collider.Size := Vector3(BoundingBox.Size.XY, 20);
 
-  RigidBody := RBody;    
-  WritelnLog('Tut2___');
+  RigidBody := RBody;
 
   Debug := TDebugTransform.Create(Self);
   Debug.Attach(Self);
   Debug.Exists := true;
-  WritelnLog('Tut3___');
 
   {Radar}
   mini:= TCastleImageControl.Create(Self);
@@ -122,8 +122,7 @@ begin
       mini.URL:= 'castle-data:/radar/Asteroid_mini.png';
   end;
   mini.Width:= 10;
-  mini.Height:= 10; 
-  WritelnLog('Tut4___');
+  mini.Height:= 10;
 end;
 
 function TStation.GenerateAsteroidName(Index: Integer): String;

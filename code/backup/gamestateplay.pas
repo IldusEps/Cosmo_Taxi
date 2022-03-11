@@ -10,8 +10,8 @@ interface
 uses Classes,
   CastleUIState, CastleComponentSerialize, CastleUIControls, CastleControls,
   CastleKeysMouse, CastleViewport, CastleScene, CastleVectors, CastleLog, CastleImages,
-  CastleGLImages, CastleTransform, Radar, Station, Universy, CastleDebugTransform,
-  CastleColors;
+  CastleGLImages, CastleTransform, CastleDebugTransform, CastleColors,
+  Radar, Station, Universy, Profile;
 
 
 { classes }
@@ -25,11 +25,6 @@ TRocket = class
   Rotation: Double;
   LabelRocket: TCastleLabel;
   Scene: TCastleScene;
-
-  { constans }
-  BaseSpeed: Double;
-  AddSpeed: Double;
-  BaseRotation: Double;
 
   procedure Land;
 end;
@@ -75,11 +70,12 @@ type
     Universy: TUniversy;
 
     { Others }
+    Profile: TProfile;
     CheckboxCameraFollow: TCastleCheckbox;
   public
     constructor Create(AOwner: TComponent); override;
     procedure Start; override;
-    procedure Render; override;
+    procedure Stop; override;
     procedure Update(const SecondsPassed: Single; var HandleInput: Boolean); override;
     function Press(const Event: TInputPressRelease): Boolean; override;
 
@@ -221,6 +217,7 @@ begin
 
   { Stations }
   SetLength(Stations, 127);
+  Universy.Universy_Skips:= False;
   Universy.SetVectors2(Length(Stations)-1);
 
   for i:= 0 to Length(Stations)-1 do
@@ -252,11 +249,9 @@ begin
   HintAsteroids:= THintAsteroid.Create(Self);
 
   { Parameters }
+  Profile:= TProfile.Create;
   Rocket:= TRocket.Create;
   Rocket.Landing:= False;
-  Rocket.BaseSpeed:= 0.5;
-  Rocket.AddSpeed:= 0.3;
-  Rocket.BaseRotation:= 0.01;
   Rocket.Scene:= SceneRocket;
   RadarZoom:= 2000;
   Randomize;
@@ -279,8 +274,10 @@ begin
   end;
 end;
 
-procedure TStatePlay.Render;
+procedure TStatePlay.Stop;
 begin
+  inherited Stop;
+  Profile.Save;
 end;
 
 procedure TStatePlay.Update(const SecondsPassed: Single; var HandleInput: Boolean);
@@ -350,11 +347,18 @@ begin
       T:= SceneRocket.RigidBody.GetCollidingTransforms[i];
       Rocket.LabelRocket.Text[4] := ('Trans: ' + FloatToStr(SceneRocket.Translation.Y - T.Translation.Y)) + ' __ ' + T.Name;
       if (SceneRocket.Translation.Y - T.Translation.Y <= 150) AND (SceneRocket.Translation.Y - T.Translation.Y > 0)
+      AND (abs(SceneRocket.Translation.X - T.Translation.X) <= 150)
        AND (-Rocket.Speed.Y <= 3) AND (-Rocket.Speed.Y >= 0.5)
        AND (Rocket.Speed.X <= 10) AND (cos(Rocket.Rotation) >= 0.98) then
       begin
         Rocket.Land;
         Space_on_Start.Exists:= True;
+        if (TStation(T).IsDestination) then
+        begin
+          TStation(T).IsDestination:= False;
+          Profile.Money:= Profile.Money + TStation(T).Price;
+          Profile.Save;
+        end;
       end;
     end;
 
@@ -445,41 +449,41 @@ begin
     begin
       if Event.IsKey(keyW) OR Event.IsKey(keyArrowUp) then
       begin
-        Rocket.Speed.Y := Rocket.Speed.Y + Rocket.BaseSpeed * cos(Rocket.Rotation);
-        Rocket.Speed.X := Rocket.Speed.X - Rocket.BaseSpeed * sin(Rocket.Rotation);
+        Rocket.Speed.Y := Rocket.Speed.Y + Profile.BaseSpeed * cos(Rocket.Rotation);
+        Rocket.Speed.X := Rocket.Speed.X - Profile.BaseSpeed * sin(Rocket.Rotation);
         HintClose;
         SceneRocket.PlayAnimation('Speed', false);
       end
       else if Event.IsKey(keyS) OR Event.IsKey(keyArrowDown) then
       begin
-        Speed.Y := Speed.Y - BaseSpeed * cos(Rotation);
-        Speed.X := Speed.X + BaseSpeed * sin(Rotation);
+        Speed.Y := Speed.Y - Profile.BaseSpeed * cos(Rotation);
+        Speed.X := Speed.X + Profile.BaseSpeed * sin(Rotation);
         HintClose;
         SceneRocket.PlayAnimation('Down', false);
       end
       else if Event.IsKey(keyA) OR Event.IsKey(keyArrowLeft) then
       begin
-        Rotation := Rocket.Rotation + BaseRotation;
+        Rotation := Rocket.Rotation + Profile.BaseRotation;
         HintClose;
         SceneRocket.PlayAnimation('LeftRotate', false);
       end
       else if Event.IsKey(keyD) OR Event.IsKey(keyArrowRight) then
       begin
-        Rotation := Rotation - BaseRotation;
+        Rotation := Rotation - Profile.BaseRotation;
         HintClose;
         SceneRocket.PlayAnimation('RightRotate', false);
       end
       else if Event.IsKey(keyQ) OR Event.IsKey(key4) then
       begin
-        Speed.Y := Speed.Y - AddSpeed * sin(Rotation);
-        Speed.X := Speed.X - AddSpeed * cos(Rotation);
+        Speed.Y := Speed.Y - Profile.AddSpeed * sin(Rotation);
+        Speed.X := Speed.X - Profile.AddSpeed * cos(Rotation);
         HintClose;
         SceneRocket.PlayAnimation('Left', false);
       end
       else if Event.IsKey(keyE) OR Event.IsKey(key6) then
       begin
-        Speed.Y := Speed.Y + AddSpeed * sin(Rotation);
-        Speed.X := Speed.X + AddSpeed * cos(Rotation);
+        Speed.Y := Speed.Y + Profile.AddSpeed * sin(Rotation);
+        Speed.X := Speed.X + Profile.AddSpeed * cos(Rotation);
         HintClose;
         SceneRocket.PlayAnimation('Right', false);
       end;

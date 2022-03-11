@@ -69,7 +69,7 @@ var
 begin
   bool:= False;
 
-  if (((abs(iXY.X) <= 100000) AND (abs(iXY.Y) <= 100000)) OR IsDestination) AND ((abs(iXY.Y) > XY_Display.Y + 100) OR (abs(iXY.X) > XY_Display.X + 100)) then
+  if (((abs(iXY.X) <= 300000) AND (abs(iXY.Y) <= 300000)) OR IsDestination) AND ((abs(iXY.Y) > XY_Display.Y + 100) OR (abs(iXY.X) > XY_Display.X + 100)) then
   begin
     if Names.IndexOf(AName) = -1 then
     begin

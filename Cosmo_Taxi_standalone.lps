@@ -3,7 +3,7 @@
   <ProjectSession>
     <PathDelim Value="\"/>
     <Version Value="12"/>
-    <Units Count="12">
+    <Units Count="15">
       <Unit0>
         <Filename Value="Cosmo_Taxi_standalone.dpr"/>
         <IsPartOfProject Value="True"/>
@@ -34,9 +34,10 @@
         <Filename Value="code\gamestateplay.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="GameStatePlay"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="219"/>
-        <CursorPos X="33" Y="232"/>
+        <TopLine Value="335"/>
+        <CursorPos X="23" Y="360"/>
         <ExtraEditorCount Value="1"/>
         <ExtraEditor1>
           <EditorIndex Value="-1"/>
@@ -45,14 +46,17 @@
           <CursorPos X="-1" Y="-1"/>
         </ExtraEditor1>
         <UsageCount Value="227"/>
+        <Bookmarks Count="1">
+          <Item0 Y="356"/>
+        </Bookmarks>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="code\radar.pas"/>
         <UnitName Value="Radar"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="61"/>
-        <CursorPos X="58" Y="72"/>
+        <TopLine Value="85"/>
+        <CursorPos X="43" Y="115"/>
         <UsageCount Value="114"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -61,24 +65,23 @@
         <UnitName Value="Background"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="11"/>
-        <UsageCount Value="52"/>
+        <UsageCount Value="45"/>
       </Unit6>
       <Unit7>
         <Filename Value="code\station.pas"/>
         <UnitName Value="Station"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="99"/>
-        <CursorPos X="27" Y="122"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="37"/>
+        <CursorPos X="30" Y="49"/>
         <UsageCount Value="144"/>
         <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="code\universy.pas"/>
         <UnitName Value="Universy"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="22"/>
-        <CursorPos X="28" Y="30"/>
+        <CursorPos X="52" Y="31"/>
         <UsageCount Value="114"/>
         <Loaded Value="True"/>
       </Unit8>
@@ -87,143 +90,167 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="846"/>
         <CursorPos X="11" Y="846"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="0"/>
       </Unit9>
       <Unit10>
         <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\win\syswin.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="354"/>
         <CursorPos X="26" Y="356"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="0"/>
       </Unit10>
       <Unit11>
         <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\win\sysos.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="219"/>
         <CursorPos X="13" Y="238"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="0"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="code\profile.pas"/>
+        <UnitName Value="Profile"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="6"/>
+        <CursorPos X="37" Y="36"/>
+        <UsageCount Value="45"/>
+        <Loaded Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="..\CosmoTaxi\mainstate.pas"/>
+        <UnitName Value="MainState"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="672"/>
+        <CursorPos X="60" Y="670"/>
+        <UsageCount Value="5"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="..\CosmoTaxi\boots_state.pas"/>
+        <UnitName Value="Boots_state"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="111"/>
+        <UsageCount Value="5"/>
+      </Unit14>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="code\radar.pas"/>
-        <Caret Line="40" Column="107" TopLine="40"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="361" Column="57" TopLine="345"/>
       </Position1>
       <Position2>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="349" Column="47" TopLine="344"/>
+        <Caret Line="360" TopLine="345"/>
       </Position2>
       <Position3>
-        <Filename Value="code\radar.pas"/>
-        <Caret Line="40" Column="100" TopLine="32"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="263" Column="36" TopLine="238"/>
       </Position3>
       <Position4>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="24" Column="57" TopLine="11"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="361" Column="44" TopLine="342"/>
       </Position4>
       <Position5>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="13" Column="49"/>
+        <Filename Value="code\profile.pas"/>
+        <Caret Line="10" Column="24"/>
       </Position5>
       <Position6>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="67" Column="45" TopLine="38"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="417" Column="33" TopLine="390"/>
       </Position6>
       <Position7>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="24" Column="28"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="234" Column="33" TopLine="230"/>
       </Position7>
       <Position8>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="82" Column="39" TopLine="55"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="95" TopLine="76"/>
       </Position8>
       <Position9>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="24" Column="32" TopLine="5"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="242" Column="36" TopLine="231"/>
       </Position9>
       <Position10>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="44" Column="30" TopLine="13"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="30" Column="12" TopLine="19"/>
       </Position10>
       <Position11>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="82" Column="39" TopLine="51"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="259" Column="19" TopLine="238"/>
       </Position11>
       <Position12>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="87" Column="24" TopLine="56"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="454" Column="60" TopLine="71"/>
       </Position12>
       <Position13>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="7" Column="7" TopLine="7"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="455" Column="60" TopLine="424"/>
       </Position13>
       <Position14>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="87" Column="6" TopLine="55"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="461" Column="39" TopLine="431"/>
       </Position14>
       <Position15>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="386" Column="49" TopLine="370"/>
+        <Caret Line="462" Column="39" TopLine="432"/>
       </Position15>
       <Position16>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="490" Column="41" TopLine="468"/>
+        <Caret Line="30" Column="12" TopLine="11"/>
       </Position16>
       <Position17>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="23" Column="71" TopLine="4"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="257" Column="28" TopLine="238"/>
       </Position17>
       <Position18>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="25" Column="38" TopLine="13"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="452" Column="60" TopLine="421"/>
       </Position18>
       <Position19>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="28" Column="3" TopLine="17"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="545" Column="47" TopLine="514"/>
       </Position19>
       <Position20>
-        <Filename Value="code\station.pas"/>
-        <Caret Line="31" Column="78" TopLine="9"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="27" Column="23" TopLine="16"/>
       </Position20>
       <Position21>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="341" Column="68" TopLine="329"/>
+        <Caret Line="447" Column="61" TopLine="416"/>
       </Position21>
       <Position22>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="53" Column="17" TopLine="34"/>
+        <Caret Line="448" Column="61" TopLine="417"/>
       </Position22>
       <Position23>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="257" Column="15" TopLine="227"/>
+        <Caret Line="454" Column="47" TopLine="424"/>
       </Position23>
       <Position24>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="258" Column="24" TopLine="228"/>
+        <Caret Line="455" Column="47" TopLine="425"/>
       </Position24>
       <Position25>
-        <Filename Value="code\radar.pas"/>
-        <Caret Line="40" Column="94" TopLine="26"/>
+        <Filename Value="code\gamestateplay.pas"/>
+        <Caret Line="447" Column="61" TopLine="425"/>
       </Position25>
       <Position26>
-        <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="397" Column="47" TopLine="385"/>
+        <Filename Value="code\profile.pas"/>
+        <Caret Line="12" Column="19"/>
       </Position26>
       <Position27>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="14" Column="3"/>
+        <Caret Line="78" Column="30" TopLine="50"/>
       </Position27>
       <Position28>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="400" Column="22" TopLine="391"/>
+        <Caret Line="282" Column="5" TopLine="277"/>
       </Position28>
       <Position29>
-        <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="234" Column="37" TopLine="222"/>
+        <Filename Value="code\station.pas"/>
+        <Caret Line="122" Column="27" TopLine="99"/>
       </Position29>
       <Position30>
         <Filename Value="code\gamestateplay.pas"/>
-        <Caret Line="69" Column="32" TopLine="52"/>
+        <Caret Line="275" Column="32" TopLine="236"/>
       </Position30>
     </JumpHistory>
     <RunParams>

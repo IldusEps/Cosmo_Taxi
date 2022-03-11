@@ -19,13 +19,13 @@ private
   procedure SetIsNeedTaxi(AValue: Boolean);
   procedure SetTypeStation(AValue: String);
 public
-  //Scene: TCastleScene; 
   RBody: TRigidBody;
   Collider: TBoxCollider;
   CaptionStation: String;
   {Radar}
   mini: TCastleImageControl;
 
+  Price: Integer;
   property TypeStation: String read ATypeStation write SetTypeStation;
   property IsNeedTaxi: Boolean read AIsNeedTaxi write SetIsNeedTaxi;
   property IsDestination: Boolean read AIsDestination write SetIsDestination;
@@ -44,7 +44,10 @@ begin
   if AIsDestination = AValue then Exit;
 
   if AValue then
-    mini.URL:= 'castle-data:/radar/Destination_mini.png'
+  begin
+    mini.URL:= 'castle-data:/radar/Destination_mini.png';
+    Price:= Random(1000 - 500) + 500;
+  end
   else
     SetTypeStation(TypeStation);
   AIsDestination:= AValue;
