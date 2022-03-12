@@ -234,7 +234,8 @@
         "$$ClassName" : "TCastleImagePersistent",
         "ColorPersistent" : {
           "$$ClassName" : "TCastleColorPersistent",
-          "Alpha" : 4.3529409170150757E-001
+          "Alpha" : 6.0000002384185791E-001,
+          "Blue" : 0.0000000000000000E+000
         },
         "URL" : "castle-data:/radar/HintAsteroids.png"
       },

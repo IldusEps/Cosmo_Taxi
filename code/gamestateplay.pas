@@ -47,6 +47,7 @@ type
     SceneRocket: TCastleScene;
     Rocket: TRocket;
     StationIndex: Integer;
+    hyperJump_count: Integer;
 
     { Radar }  
     Rocket_mini: TCastleImageControl;
@@ -445,6 +446,13 @@ begin
 
   if NOT(Rocket.Landing) then
   begin
+    if hyperJump_count > 0 then
+    begin
+      if NOT(Event.IsKey(keyR)) then
+        hyperJump_count:= hyperJump_count - 1;
+    end
+    else
+      hyperJump_count:= hyperJump_count + 1;
     with Rocket do
     begin
       if Event.IsKey(keyW) OR Event.IsKey(keyArrowUp) then
@@ -486,6 +494,23 @@ begin
         Speed.X := Speed.X + Profile.AddSpeed * cos(Rotation);
         HintClose;
         SceneRocket.PlayAnimation('Right', false);
+      end
+      else if Event.IsKey(keyR) then
+      begin
+        hyperJump_count:= hyperJump_count + 1;
+        Rocket.Speed.Y := Rocket.Speed.Y + Profile.BaseSpeed * cos(Rocket.Rotation);
+        Rocket.Speed.X := Rocket.Speed.X - Profile.BaseSpeed * sin(Rocket.Rotation);
+        WritelnLog(IntToStr(hyperJump_count));
+        if hyperJump_count > 150 then
+        begin
+          WritelnLog(FloatToStr(Scene.TranslationXY.X) + '__' + FloatToStr(Scene.TranslationXY.Y));
+          Scene.TranslationXY:= Vector2(Scene.TranslationXY.X - (Random(Profile.HyperJumpSpeed - 50000) + 50000) * sin(Rotation), Scene.TranslationXY.Y + (Random(Profile.HyperJumpSpeed - 50000) + 50000) * cos(Rotation));
+          WritelnLog(FloatToStr(Scene.TranslationXY.X) + '__' + FloatToStr(Scene.TranslationXY.Y));
+          Speed.Y := 1;
+          Speed.X := 1;
+          hyperJump_count:= hyperJump_count - 50;
+        end;
+        HintClose;
       end;
     end;
   end else

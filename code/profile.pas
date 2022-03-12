@@ -13,6 +13,7 @@ type
     BaseSpeed: Double;
     AddSpeed: Double;
     BaseRotation: Double;
+    HyperJumpSpeed: Integer;
 
     constructor Create;
     procedure Save;
@@ -28,7 +29,8 @@ begin
   Money := UserConfig.GetInteger('Money', 1000);
   BaseSpeed := UserConfig.GetFloat('BaseSpeed', 0.5);
   AddSpeed := UserConfig.GetFloat('AddSpeed', 0.3);
-  BaseRotation := UserConfig.GetFloat('BaseRotation', 0.01);
+  BaseRotation := UserConfig.GetFloat('BaseRotation', 0.01); 
+  HyperJumpSpeed := UserConfig.GetInteger('HyperJumpSpeed', 6000000);
 end;
 
 procedure TProfile.Save;
@@ -36,7 +38,8 @@ begin
   UserConfig.SetValue('Money', Money);
   UserConfig.SetFloat('BaseSpeed', BaseSpeed);
   UserConfig.SetFloat('AddSpeed', AddSpeed);
-  UserConfig.SetFloat('BaseRotation', BaseRotation);
+  UserConfig.SetFloat('BaseRotation', BaseRotation); 
+  UserConfig.SetValue('HyperJumpSpeed', HyperJumpSpeed);
   UserConfig.Save;
 end;
 

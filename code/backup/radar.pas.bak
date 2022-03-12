@@ -35,7 +35,6 @@ THintAsteroid = class(TComponent)
   public
     arrays: array of TCastleImageControl;
     Names: TStringList;
-    MainViewport: TCastleViewport;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Add(iXY: TVector2; XY_Display: TVector3; AName: String;
@@ -81,6 +80,8 @@ begin
     end
     else
       i:= Names.IndexOf(AName);
+    if IsDestination then
+      WritelnLog('IsDestinaion' + AName);
     if bool then
     begin
       arrays[i]:= TCastleImageControl.Create(Self);
@@ -91,38 +92,34 @@ begin
     end;
     arrays[i].Exists:= True;
 
-    X:= MainViewport.PositionFrom2DWorld(Vector2(XY_Display.Y * iXY.X / abs(iXY.Y), XY_Display.X * iXY.Y / abs(iXY.X)), True).X;
+    X:= XY_Display.Y * iXY.X / abs(iXY.Y);
     if X = 1/0 then
        X:= 0;
-    Y:= MainViewport.PositionFrom2DWorld(Vector2(XY_Display.Y * iXY.X / abs(iXY.Y), XY_Display.X * iXY.Y / abs(iXY.X)), True).Y;
+    Y:= XY_Display.X * iXY.Y / abs(iXY.X);
     if Y = 1/0 then
        Y:= 0;
-    arrays[i].Left:= X;
-    arrays[i].Bottom:= Y;
+    if Abs(X) < Abs(XY_Display.X) then
+    begin
+      arrays[i].Anchor(hpMiddle, hpMiddle, X / XY_Display.Z);
+      if iXY.Y > 0 then
+        arrays[i].Anchor(vpTop, vpTop, -5)
+      else
+        arrays[i].Anchor(vpBottom, vpBottom, 5);
+    end
+    else
+    begin
+      arrays[i].Anchor(vpMiddle, vpMiddle, Y / XY_Display.Z);
+      if iXY.X > 0 then
+        arrays[i].Anchor(hpRight, hpRight, -5)
+      else
+        arrays[i].Anchor(hpLeft, hpLeft, 5);
+    end;
 
-    //X:= XY_Display.Y * iXY.X / abs(iXY.Y);
-    //if X = 1/0 then
-    //   X:= 0;
-    //Y:= XY_Display.X * iXY.Y / abs(iXY.X);
-    //if Y = 1/0 then
-    //   Y:= 0;
-    //if Abs(X) < Abs(XY_Display.X) then
-    //begin
-    //  arrays[i].Anchor(hpMiddle, hpMiddle, X / XY_Display.Z);
-    //  if iXY.Y > 0 then
-    //    arrays[i].Anchor(vpTop, vpTop, -5)
-    //  else
-    //    arrays[i].Anchor(vpBottom, vpBottom, 5);
-    //end
-    //else
-    //begin
-    //  arrays[i].Anchor(vpMiddle, vpMiddle, Y / XY_Display.Z);
-    //  if iXY.X > 0 then
-    //    arrays[i].Anchor(hpRight, hpRight, -5)
-    //  else
-    //    arrays[i].Anchor(hpLeft, hpLeft, 5);
-    //end;
-    //
+    if IsDestination then
+      arrays[i].Color:= Vector4(0.8, 0, 1, 1)
+    else
+      arrays[i].Color:= Vector4(0.8, 1, 1, 1);
+
     Distance:= round(Sqrt(Sqr(iXY.X) + Sqr(iXY.Y)) / 100);
     if bool then
     begin

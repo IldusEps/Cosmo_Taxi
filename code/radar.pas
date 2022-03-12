@@ -80,6 +80,8 @@ begin
     end
     else
       i:= Names.IndexOf(AName);
+    if IsDestination then
+      WritelnLog('IsDestinaion' + AName);
     if bool then
     begin
       arrays[i]:= TCastleImageControl.Create(Self);
@@ -112,6 +114,11 @@ begin
       else
         arrays[i].Anchor(hpLeft, hpLeft, 5);
     end;
+
+    if IsDestination then
+      arrays[i].Color:= Vector4(0.8, 0, 1, 1)
+    else
+      arrays[i].Color:= Vector4(0.8, 1, 1, 1);
 
     Distance:= round(Sqrt(Sqr(iXY.X) + Sqr(iXY.Y)) / 100);
     if bool then
